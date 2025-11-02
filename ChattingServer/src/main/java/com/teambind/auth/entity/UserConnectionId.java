@@ -10,7 +10,7 @@ import java.io.Serializable;
 @ToString
 @EqualsAndHashCode
 
-public class UserConnectionId  implements Serializable {
+public class UserConnectionId implements Serializable {
 	
 	private Long partnerUserAId;
 	private Long partnerUserBId;

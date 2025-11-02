@@ -44,14 +44,14 @@ public class UserConnectionService {
 		return switch (status) {
 			case NONE, DISCONNECTED -> {
 				Optional<String> invitorUsername = userService.getUsername(invitoerUserId);
-				if(invitorUsername.isEmpty()) {
+				if (invitorUsername.isEmpty()) {
 					log.warn("invitor username is empty. {}", invitoerUserId);
 					yield Pair.of(Optional.empty(), "invitor username is empty");
 				}
-				try{
+				try {
 					setStatus(invitoerUserId, partnerUserId, UserConnectionStatus.PENDING);
 					yield Pair.of(Optional.of(partnerUserId), invitorUsername.get());
-				}catch (Exception e) {
+				} catch (Exception e) {
 					log.error("setStatus error : {}", e.getMessage());
 					yield Pair.of(Optional.empty(), "setStatus error");
 				}
@@ -59,7 +59,7 @@ public class UserConnectionService {
 			case ACCEPTED -> Pair.of(Optional.of(partnerUserId), "already accepted to " + partnerUserName);
 			case PENDING, REJECTED -> {
 				log.info("{} invites {} but dose not deliver inviation request", invitoerUserId, partnerUserId);
-				yield Pair.of(Optional.of(partnerUserId),  "already invited to " + partnerUserName);
+				yield Pair.of(Optional.of(partnerUserId), "already invited to " + partnerUserName);
 			}
 			default -> {
 				log.error("unknown status : {}", status);

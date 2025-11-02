@@ -41,8 +41,9 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	protected void handleTextMessage(WebSocketSession senderSession, TextMessage message) {
 		String payload = message.getPayload();
 		log.info("Message Received: {} from {}", payload, senderSession.getId());
-		jsonUtil.fromJson(payload,BaseRequest.class).ifPresent(baseRequest -> {
-			requestHandlerDispatcher.dispatch(senderSession, baseRequest);});
+		jsonUtil.fromJson(payload, BaseRequest.class).ifPresent(baseRequest -> {
+			requestHandlerDispatcher.dispatch(senderSession, baseRequest);
+		});
 	}
 	
 	@Override
@@ -60,7 +61,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 				new ConcurrentWebSocketSessionDecorator(session, 5000, 100 * 1024);
 		
 		UserId userId = (UserId) session.getAttributes().put(Constants.USER_ID.getValue(), session.getId());
-		sessionManager.putSession(userId,concurrentWebSocketSessionDecorator);
+		sessionManager.putSession(userId, concurrentWebSocketSessionDecorator);
 	}
 	
 }

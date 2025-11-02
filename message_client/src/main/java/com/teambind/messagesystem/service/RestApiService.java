@@ -42,16 +42,17 @@ public class RestApiService {
 						-> httpResponse.statusCode() == HttpStatus.OK_200.getStatusCode()).orElse(false);
 	}
 	
-	public boolean login(String username, String password)
-	{
+	public boolean login(String username, String password) {
 		return request("/api/v1/auth/login", "", new LoginRequest(username, password)).map(
-				httpResponse
-						->{
-					if (httpResponse.statusCode() == HttpStatus.OK_200.getStatusCode()) {
-						sessionId = httpResponse.body();
-						return true;
-					} else {
-						return false;}})
+						httpResponse
+								-> {
+							if (httpResponse.statusCode() == HttpStatus.OK_200.getStatusCode()) {
+								sessionId = httpResponse.body();
+								return true;
+							} else {
+								return false;
+							}
+						})
 				.orElse(false);
 	}
 	
@@ -60,8 +61,8 @@ public class RestApiService {
 			return false;
 		}
 		return request("/api/v1/auth/logout", sessionId, null).filter(
-				httpResponse
-						-> httpResponse.statusCode() == HttpStatus.OK_200.getStatusCode())
+						httpResponse
+								-> httpResponse.statusCode() == HttpStatus.OK_200.getStatusCode())
 				.isPresent();
 	}
 	

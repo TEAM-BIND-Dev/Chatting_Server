@@ -3,9 +3,7 @@ package com.teambind.auth.entity;
 import com.teambind.common.config.baseEntity.BaseEntity;
 import com.teambind.constant.UserConnectionStatus;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;

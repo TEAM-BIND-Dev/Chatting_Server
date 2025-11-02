@@ -2,7 +2,7 @@ package com.teambind.chattingserver.dto.websocket.outbound;
 
 import com.teambind.constant.MessageType;
 
-public class AcceptNotification extends BaseMessage{
+public class AcceptNotification extends BaseMessage {
 	
 	
 	private final String username;

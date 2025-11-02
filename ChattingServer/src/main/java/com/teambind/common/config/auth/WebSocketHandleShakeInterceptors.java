@@ -45,7 +45,7 @@ public class WebSocketHandleShakeInterceptors extends HttpSessionHandshakeInterc
 				response.setStatusCode(HttpStatus.UNAUTHORIZED);
 				return false;
 			}
-			MessageUserDetails userDetails =(MessageUserDetails)authentication.getPrincipal();
+			MessageUserDetails userDetails = (MessageUserDetails) authentication.getPrincipal();
 			attributes.put(Constants.USER_ID.getValue(), new UserId(userDetails.getUserId()));
 			attributes.put(Constants.HTTP_SESSION_ID.getValue(), httpSession.getId());
 			return true;

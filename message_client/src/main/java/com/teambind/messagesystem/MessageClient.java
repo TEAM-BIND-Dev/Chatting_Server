@@ -11,7 +11,6 @@ import com.teambind.messagesystem.service.WebSocketService;
 import com.teambind.messagesystem.util.JsonUtil;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 public class MessageClient {
 	
@@ -26,7 +25,7 @@ public class MessageClient {
 			System.err.println("Failed to create TerminalService. error : " + e.getMessage());
 			return;
 		}
-
+		
 		JsonUtil.setTerminalService(terminalService);
 		RestApiService restApiService = new RestApiService(terminalService, BASE_URL);
 		WebSocketSender webSocketSender = new WebSocketSender(terminalService);

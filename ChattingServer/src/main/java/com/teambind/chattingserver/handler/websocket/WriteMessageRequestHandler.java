@@ -1,6 +1,5 @@
 package com.teambind.chattingserver.handler.websocket;
 
-import com.teambind.chattingserver.dto.Message;
 import com.teambind.chattingserver.dto.websocket.inbound.WriteMessageRequest;
 import com.teambind.chattingserver.dto.websocket.outbound.MessageNotification;
 import com.teambind.chattingserver.entity.MessageEntity;
@@ -10,7 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 @Component
-public class WriteMessageRequestHandler  implements  BaseRequestHandler<WriteMessageRequest> {
+public class WriteMessageRequestHandler implements BaseRequestHandler<WriteMessageRequest> {
 	private final WebSocketSessionManager sessionManager;
 	private final MessageRepository messageRepository;
 	

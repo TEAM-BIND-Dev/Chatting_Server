@@ -1,11 +1,10 @@
 package com.teambind.chattingserver.dto.websocket.outbound;
 
 import com.teambind.constant.MessageType;
-import lombok.Getter;
 
 
 public class MessageNotification extends BaseMessage {
-
+	
 	private final String username;
 	private final String content;
 	

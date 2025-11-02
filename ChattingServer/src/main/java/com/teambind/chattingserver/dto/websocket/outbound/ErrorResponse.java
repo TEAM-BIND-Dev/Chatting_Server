@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponse extends BaseMessage {
-
+	
 	private final String messageType;
 	private final String message;
 	

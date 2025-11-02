@@ -6,7 +6,7 @@ import com.teambind.constant.UserConnectionStatus;
 import lombok.Getter;
 
 @Getter
-public class InviteResponse extends BaseMessage{
+public class InviteResponse extends BaseMessage {
 	
 	private final InviteCode inviteCode;
 	private final UserConnectionStatus status;

@@ -74,38 +74,34 @@ class WebSocketHandlerSpec extends Specification {
     }
 
 
-    def register(String username, String password)
-    {
+    def register(String username, String password) {
         def url = "http://localhost:${port}/api/v1/auth/register"
-        def headers = new HttpHeaders(["Content-Type" : "application/json"])
-        def requestBody = [username :username , password: password]
+        def headers = new HttpHeaders(["Content-Type": "application/json"])
+        def requestBody = [username: username, password: password]
         def jsonBody = objectMapper.writeValueAsString(requestBody)
         def httpEntity = new HttpEntity(jsonBody, headers)
 
-        try{
+        try {
             new RestTemplate().exchange(url, HttpMethod.POST, httpEntity, String)
-        }catch ( Exception ignore)
-        {
+        } catch (Exception ignore) {
 
         }
     }
 
-    def unRegister(String sessionId)
-    {
+    def unRegister(String sessionId) {
         def url = "http://localhost:${port}/api/v1/auth/unregister"
         def headers = new HttpHeaders()
         headers.add("Content-Type", "application/json")
-        headers.add("Cookie" , "SESSION=${sessionId}")
+        headers.add("Cookie", "SESSION=${sessionId}")
         def httpEntity = new HttpEntity(headers)
         def responseEntity = new RestTemplate().exchange(url, HttpMethod.POST, httpEntity, String)
         responseEntity
     }
 
-    def login(String username, String password)
-    {
+    def login(String username, String password) {
         def url = "http://localhost:${port}/api/v1/auth/login"
-        def headers = new HttpHeaders(["Content-Type" : "application/json"])
-        def requestBody = [username :username , password: password]
+        def headers = new HttpHeaders(["Content-Type": "application/json"])
+        def requestBody = [username: username, password: password]
         def jsonBody = objectMapper.writeValueAsString(requestBody)
         def httpEntity = new HttpEntity(jsonBody, headers)
         def responseEntity = new RestTemplate().exchange(url, HttpMethod.POST, httpEntity, String)
@@ -114,12 +110,11 @@ class WebSocketHandlerSpec extends Specification {
     }
 
 
-
     def createClient(String sessionId) {
         def url = "ws://localhost:${port}/ws/v1/message"
         BlockingQueue<String> blockingQueue = new ArrayBlockingQueue<>(5);
         WebSocketHttpHeaders headers = new WebSocketHttpHeaders();
-        headers.add("Cookie" , "SESSION=${sessionId}")
+        headers.add("Cookie", "SESSION=${sessionId}")
         def client = new StandardWebSocketClient()
         def webSocketSession = client.execute(new TextWebSocketHandler()
         {
@@ -127,7 +122,7 @@ class WebSocketHandlerSpec extends Specification {
             protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
                 blockingQueue.put(message.payload)
             }
-        },headers, new URI(url)).get()
+        }, headers, new URI(url)).get()
 
         return [queue: blockingQueue, session: webSocketSession]
     }

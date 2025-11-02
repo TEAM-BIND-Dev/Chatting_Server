@@ -13,7 +13,6 @@ import jakarta.websocket.Session;
 import org.glassfish.tyrus.client.ClientManager;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -81,8 +80,7 @@ public class WebSocketService {
 	public void sendMessage(BaseRequest baseRequest) {
 		
 		if (session != null && session.isOpen()) {
-			if(baseRequest instanceof MessageRequest messageRequest)
-			{
+			if (baseRequest instanceof MessageRequest messageRequest) {
 				webSocketSender.sendMessage(session, messageRequest);
 				return;
 			}
@@ -93,8 +91,7 @@ public class WebSocketService {
 									.sendText(
 											payload,
 											result -> {
-												if(!result.isOK())
-												{
+												if (!result.isOK()) {
 													terminalService.printSystemMessage(
 															" '%s' send failed. cause: %s".formatted(payload, result.getException().getMessage()));
 												}
@@ -104,16 +101,16 @@ public class WebSocketService {
 		}
 	}
 	
-	private void enableKeepAlive(){
-		if(scheduledExecutorService == null){
+	private void enableKeepAlive() {
+		if (scheduledExecutorService == null) {
 			scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 		}
-		scheduledExecutorService.scheduleAtFixedRate( ()
-				-> sendMessage(new KeepAliveRequest()) , 1,1, TimeUnit.MINUTES);
+		scheduledExecutorService.scheduleAtFixedRate(()
+				-> sendMessage(new KeepAliveRequest()), 1, 1, TimeUnit.MINUTES);
 	}
 	
-	private void disableKeepAlive(){
-		if(scheduledExecutorService != null){
+	private void disableKeepAlive() {
+		if (scheduledExecutorService != null) {
 			scheduledExecutorService.shutdown();
 			scheduledExecutorService = null;
 		}

@@ -47,12 +47,12 @@ public class RestApiLoginAuthFilter extends AbstractAuthenticationProcessingFilt
 	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
 		SecurityContext securityContext = SecurityContextHolder.getContext();
 		securityContext.setAuthentication(authResult);
-		((MessageUserDetails)authResult.getPrincipal()).erasePassword();
+		((MessageUserDetails) authResult.getPrincipal()).erasePassword();
 		
 		HttpSessionSecurityContextRepository contextRepository = new HttpSessionSecurityContextRepository();
 		contextRepository.saveContext(securityContext, request, response);
 		String sessionId = request.getSession().getId();
-		String encodedSessionId= Base64.getEncoder().encodeToString(sessionId.getBytes(StandardCharsets.UTF_8));
+		String encodedSessionId = Base64.getEncoder().encodeToString(sessionId.getBytes(StandardCharsets.UTF_8));
 		
 		response.setStatus(HttpServletResponse.SC_OK);
 		response.setContentType(MediaType.TEXT_PLAIN_VALUE);

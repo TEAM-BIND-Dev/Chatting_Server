@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "message")
 @NoArgsConstructor
@@ -24,12 +22,11 @@ public class MessageEntity extends BaseEntity {
 	@Column(name = "content", nullable = false)
 	private String content;
 	
-
+	
 	public MessageEntity(String username, String content) {
 		this.username = username;
 		this.content = content;
 	}
-	
 	
 	
 	@Override

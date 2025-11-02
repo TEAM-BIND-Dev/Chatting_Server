@@ -22,16 +22,15 @@ public class CommandHandler {
 		prepareCommands();
 	}
 	
-	public boolean process(String command, String arguments)
-	{
-		Function<String[] , Boolean> commander = commands.getOrDefault(command, (ignored) -> {
-			terminalService.printSystemMessage("Invalid command: %s".formatted(command) );
+	public boolean process(String command, String arguments) {
+		Function<String[], Boolean> commander = commands.getOrDefault(command, (ignored) -> {
+			terminalService.printSystemMessage("Invalid command: %s".formatted(command));
 			return true;
 		});
 		return commander.apply(arguments.split(" "));
 	}
 	
-	private void prepareCommands(){
+	private void prepareCommands() {
 		commands.put("register", this::register);
 		commands.put("unregister", this::unregister);
 		commands.put("login", this::login);
@@ -40,13 +39,11 @@ public class CommandHandler {
 		commands.put("exit", this::exit);
 	}
 	
-	private Boolean register(String[] params)
-	{
-		if(params.length >  1)
-		{
-			if(restApiService.register(params[0], params[1])){
+	private Boolean register(String[] params) {
+		if (params.length > 1) {
+			if (restApiService.register(params[0], params[1])) {
 				terminalService.printSystemMessage("Registered successfully");
-			}else {
+			} else {
 				terminalService.printSystemMessage("Failed to register");
 			}
 		}
@@ -54,28 +51,23 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private Boolean unregister(String[] params)
-	{
+	private Boolean unregister(String[] params) {
 		webSocketService.closeSession();
-		if(restApiService.unregister())
-		{
+		if (restApiService.unregister()) {
 			terminalService.printSystemMessage("Unregistered successfully");
-		}
-		else {
+		} else {
 			terminalService.printSystemMessage("Failed to unregister");
 		}
 		
 		return true;
 	}
 	
-	private Boolean login(String[] params){
-		if(params.length >  1)
-		{
-			if(restApiService.login(params[0], params[1])){
-				if(webSocketService.createSession(restApiService.getSessionId())){
+	private Boolean login(String[] params) {
+		if (params.length > 1) {
+			if (restApiService.login(params[0], params[1])) {
+				if (webSocketService.createSession(restApiService.getSessionId())) {
 					terminalService.printSystemMessage("Logged in successfully");
-				}
-				else{
+				} else {
 					terminalService.printSystemMessage("Failed to login");
 				}
 			}
@@ -85,23 +77,23 @@ public class CommandHandler {
 	}
 	
 	
-	private Boolean logout(String[] params){
+	private Boolean logout(String[] params) {
 		webSocketService.closeSession();
-		if(restApiService.logout()){
+		if (restApiService.logout()) {
 			terminalService.printSystemMessage("Logout successfully");
-		}
-		else{
+		} else {
 			terminalService.printSystemMessage("Failed to logout");
 		}
 		return true;
 	}
 	
-	private Boolean clear(String[] params){
+	private Boolean clear(String[] params) {
 		terminalService.clearTerminal();
 		terminalService.printSystemMessage("Terminal cleared");
 		return true;
 	}
-	private Boolean exit(String[] params){
+	
+	private Boolean exit(String[] params) {
 		terminalService.printSystemMessage("Exiting...");
 		webSocketService.closeSession();
 		return false;

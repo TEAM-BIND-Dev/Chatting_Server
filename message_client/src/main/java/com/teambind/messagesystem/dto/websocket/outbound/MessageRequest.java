@@ -5,15 +5,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teambind.messagesystem.contents.MessageType;
 
 
-public class MessageRequest extends BaseRequest{
-
+public class MessageRequest extends BaseRequest {
+	
 	private final String username;
 	private final String content;
-
+	
 	@JsonCreator
 	public MessageRequest(
 			@JsonProperty("username") String username,
-			@JsonProperty("content") String content){
+			@JsonProperty("content") String content) {
 		super(MessageType.MESSAGE);
 		this.username = username;
 		this.content = content;

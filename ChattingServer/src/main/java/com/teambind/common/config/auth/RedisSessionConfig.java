@@ -1,7 +1,5 @@
 package com.teambind.common.config.auth;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,9 +8,6 @@ import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.session.FlushMode;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
-import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisIndexedHttpSession;
-
-import java.security.Security;
 
 @Configuration
 @EnableRedisHttpSession(redisNamespace = "message:user_session", maxInactiveIntervalInSeconds = 300, flushMode = FlushMode.IMMEDIATE)

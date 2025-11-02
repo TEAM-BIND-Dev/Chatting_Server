@@ -12,12 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-
 @RestController
 @RequestMapping("/api/v1/auth")
 public class UserController {
-	Logger log = LoggerFactory.getLogger(UserController.class);
 	private final UserService userService;
+	Logger log = LoggerFactory.getLogger(UserController.class);
 	
 	public UserController(UserService userService) {
 		this.userService = userService;
@@ -29,22 +28,23 @@ public class UserController {
 		try {
 			var response = userService.addUser(req.username(), req.password());
 			return ResponseEntity.ok("User registered successfully: ");
-		}catch (
+		} catch (
 				Exception e
-		){
+		) {
 			log.error("register error : {}", e.getMessage());
 			return ResponseEntity.internalServerError().body(e.getMessage());
 		}
 	}
+	
 	@PostMapping("/unregister")
 	public ResponseEntity<String> unregister(HttpServletRequest request) {
 		try {
 			userService.removeUser();
 			request.getSession().invalidate();
 			return ResponseEntity.ok("User unregistered successfully");
-		}catch (
+		} catch (
 				Exception e
-		){
+		) {
 			log.error("unregister error : {}", e.getMessage());
 			return ResponseEntity.internalServerError().body(e.getMessage());
 		}

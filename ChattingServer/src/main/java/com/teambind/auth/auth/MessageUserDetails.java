@@ -15,7 +15,7 @@ public class MessageUserDetails implements UserDetails {
 	
 	private final Long userId;
 	private final String username;
-	private  String password;
+	private String password;
 	
 	@JsonCreator
 	public MessageUserDetails(
@@ -38,9 +38,10 @@ public class MessageUserDetails implements UserDetails {
 		return userId;
 	}
 	
-	public void erasePassword(){
+	public void erasePassword() {
 		password = "";
 	}
+	
 	@Override
 	public String getPassword() {
 		return password;

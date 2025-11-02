@@ -10,7 +10,6 @@ import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.Constants;
 import com.teambind.constant.MessageType;
 import com.teambind.constant.UserConnectionStatus;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -30,19 +29,19 @@ public class InviteRequestHandler implements BaseRequestHandler<InviteRequest> {
 	
 	@Override
 	public void handleRequest(WebSocketSession senderSession, InviteRequest request) {
-		UserId inviterUserId = (UserId)senderSession.getAttributes().get(Constants.USER_ID.getValue());
+		UserId inviterUserId = (UserId) senderSession.getAttributes().get(Constants.USER_ID.getValue());
 		Pair<Optional<UserId>, String> result = userConnectionService.invite(inviterUserId, request.getUserInviteCode());
 		result.getFirst().ifPresentOrElse(partinerUserId -> {
-			String inviterUsername = result.getSecond();
-			sessionManager.sendMessage(senderSession, new InviteResponse(request.getUserInviteCode(),
-					UserConnectionStatus.PENDING));
-			
-			sessionManager.sendMessage(
-					sessionManager.getSession(partinerUserId), new InviteNotification(inviterUsername));
-		},
+					String inviterUsername = result.getSecond();
+					sessionManager.sendMessage(senderSession, new InviteResponse(request.getUserInviteCode(),
+							UserConnectionStatus.PENDING));
+					
+					sessionManager.sendMessage(
+							sessionManager.getSession(partinerUserId), new InviteNotification(inviterUsername));
+				},
 				() -> {
-			String errorMessage = result.getSecond();
-			sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.INVITE_REQUEST, errorMessage));
-		});
+					String errorMessage = result.getSecond();
+					sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.INVITE_REQUEST, errorMessage));
+				});
 	}
 }

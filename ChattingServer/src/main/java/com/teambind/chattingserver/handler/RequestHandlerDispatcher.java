@@ -3,7 +3,6 @@ package com.teambind.chattingserver.handler;
 import com.teambind.chattingserver.dto.websocket.inbound.BaseRequest;
 import com.teambind.chattingserver.handler.websocket.BaseRequestHandler;
 import jakarta.annotation.PostConstruct;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.ListableBeanFactory;
@@ -19,9 +18,9 @@ import java.util.Map;
 @SuppressWarnings("rawtypes,unchecked")
 public class RequestHandlerDispatcher {
 	
+	private static final Logger log = LoggerFactory.getLogger(RequestHandlerDispatcher.class);
 	private final Map<Class<? extends BaseRequest>, BaseRequestHandler<? extends BaseRequest>> handlerMap = new HashMap<>();
 	private final ListableBeanFactory beanFactory;
-	private static final Logger log = LoggerFactory.getLogger(RequestHandlerDispatcher.class);
 	
 	public RequestHandlerDispatcher(ListableBeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
@@ -29,7 +28,7 @@ public class RequestHandlerDispatcher {
 	
 	public <T extends BaseRequest> void dispatch(WebSocketSession webSocketSession, T request) {
 		BaseRequestHandler<T> handler = (BaseRequestHandler<T>) handlerMap.get(request.getClass());
-		if(handler != null) {
+		if (handler != null) {
 			handler.handleRequest(webSocketSession, request);
 			return;
 		}

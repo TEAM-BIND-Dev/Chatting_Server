@@ -18,7 +18,7 @@ import java.util.Optional;
 @Service
 public class UserService {
 	private final Logger log = LoggerFactory.getLogger(UserService.class);
-	private final  SessionService sessionService;
+	private final SessionService sessionService;
 	private final UserRepository userRepository;
 	private final PasswordEncoder passwordEncoder;
 	
@@ -28,12 +28,15 @@ public class UserService {
 		this.passwordEncoder = passwordEncoder;
 	}
 	
+	public Optional<UserId> getUserId(String username) {
+		return userRepository.findByUsername(username).map(userEntity -> new UserId(userEntity.getUserId()));
+	}
 	
 	public Optional<String> getUsername(UserId userId) {
 		return userRepository.findByUserId(userId.id()).map(UsernameProjection::getUsername);
 	}
-	public Optional<User> getUser(InviteCode code)
-	{
+	
+	public Optional<User> getUser(InviteCode code) {
 		return userRepository.findByConnectionInviteCode(code.code()).map(
 				entity -> new User(new UserId(entity.getUserId()), entity.getUsername()));
 	}

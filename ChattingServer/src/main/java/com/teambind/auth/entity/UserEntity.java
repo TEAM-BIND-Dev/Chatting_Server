@@ -27,7 +27,7 @@ public class UserEntity extends BaseEntity {
 	@Column(name = "password", nullable = false)
 	private String password;
 	
-	@Column(name ="connection_invite_code", nullable = false)
+	@Column(name = "connection_invite_code", nullable = false)
 	private String connectionInviteCode;
 	
 	@Column(name = "connection_count", nullable = false)
@@ -43,9 +43,6 @@ public class UserEntity extends BaseEntity {
 		this.connectionInviteCode = UUID.randomUUID().toString().replace("-", "");
 	}
 	
-	
-
-
 	
 	@Override
 	public boolean equals(Object o) {
