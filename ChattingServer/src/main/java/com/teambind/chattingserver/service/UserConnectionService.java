@@ -17,11 +17,13 @@ import java.util.Optional;
 @Service
 public class UserConnectionService {
 	private final UserService userService;
+	private final UserConnectionLimitService userConnectionLimitService;
 	private final UserConnectionRepository userConnectionRepository;
 	Logger log = LoggerFactory.getLogger(UserConnectionService.class);
 	
-	public UserConnectionService(UserService userService, UserConnectionRepository userConnectionRepository) {
+	public UserConnectionService(UserService userService, UserConnectionLimitService userConnectionLimitService, UserConnectionRepository userConnectionRepository) {
 		this.userService = userService;
+		this.userConnectionLimitService = userConnectionLimitService;
 		this.userConnectionRepository = userConnectionRepository;
 	}
 	
@@ -66,6 +68,12 @@ public class UserConnectionService {
 				yield Pair.of(Optional.empty(), "unknown status");
 			}
 		};
+	}
+	
+	private Optional<UserId> getInvitorUserId(UserId partnerAuserId, UserId partnerBuserId) {
+		return userConnectionRepository.findInvitorUserIdByPartnerUserAIdAndPartnerUserBId(
+				Long.min(partnerAuserId.id(), partnerBuserId.id()),
+				Long.max(partnerAuserId.id(), partnerBuserId.id())).map(invitorUserIdProjection -> new UserId(invitorUserIdProjection.getInvitorUserId()));
 	}
 	
 	private UserConnectionStatus getStatus(UserId invitorUserId, UserId partnerUserId) {
