@@ -71,7 +71,7 @@ public class UserConnectionService {
 		};
 	}
 	
-	private Pair<Optional<UserId>,String> accept(UserId accepterUserId, String invitorUsername){
+	public Pair<Optional<UserId>,String> accept(UserId accepterUserId, String invitorUsername){
 		Optional<UserId> userId = userService.getUserId(invitorUsername);
 		if(userId.isEmpty())
 		{
@@ -97,7 +97,7 @@ public class UserConnectionService {
 		if(userConnectionStatus.equals(UserConnectionStatus.ACCEPTED))
 		{
 			log.info("{} already accepted to {}", accepterUserId, inviterUserId);
-			return Pair.of(Optional.of(inviterUserId), "already accepted to " + invitorUsername);
+			return Pair.of(Optional.empty(), "already accepted to " + invitorUsername);
 		}
 		
 		if(!userConnectionStatus.equals(UserConnectionStatus.PENDING))

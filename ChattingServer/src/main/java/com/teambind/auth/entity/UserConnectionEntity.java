@@ -11,8 +11,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "user_connection")
 @IdClass(UserConnectionId.class)
-@Getter
-@Setter
 public class UserConnectionEntity extends BaseEntity {
 	
 	@Id
@@ -51,5 +49,13 @@ public class UserConnectionEntity extends BaseEntity {
 	@Override
 	public int hashCode() {
 		return Objects.hash(partnerUserAId, partnerUserBId);
+	}
+	
+	public UserConnectionStatus getStatus() {
+		return status;
+	}
+	
+	public void setStatus(UserConnectionStatus status) {
+		this.status = status;
 	}
 }

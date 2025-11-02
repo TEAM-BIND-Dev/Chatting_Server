@@ -11,8 +11,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "message_user")
-@Getter
-@Setter
+
 @ToString
 public class UserEntity extends BaseEntity {
 	
@@ -32,6 +31,14 @@ public class UserEntity extends BaseEntity {
 	
 	@Column(name = "connection_count", nullable = false)
 	private int connectionCount;
+	
+	public int getConnectionCount() {
+		return connectionCount;
+	}
+	
+	public void setConnectionCount(int connectionCount) {
+		this.connectionCount = connectionCount;
+	}
 	
 	protected UserEntity() {
 		// JPA requires a no-arg constructor

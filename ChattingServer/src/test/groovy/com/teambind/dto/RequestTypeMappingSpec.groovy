@@ -1,10 +1,7 @@
 package com.teambind.dto
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.teambind.chattingserver.dto.websocket.inbound.BaseRequest
-import com.teambind.chattingserver.dto.websocket.inbound.InviteRequest
-import com.teambind.chattingserver.dto.websocket.inbound.KeepAliveRequest
-import com.teambind.chattingserver.dto.websocket.inbound.WriteMessageRequest
+import com.teambind.chattingserver.dto.websocket.inbound.*
 import com.teambind.util.JsonUtil
 import spock.lang.Specification
 
@@ -28,7 +25,9 @@ class RequestTypeMappingSpec extends Specification {
         where:
         payload                                                                    | expectedClass       | validate
         '{"type": "INVITE_REQUEST", "userInviteCode":"TestInviteCode123"}'         | InviteRequest       | { req -> (req as InviteRequest).userInviteCode.code() == 'TestInviteCode123' }
+        '{"type": "ACCEPT_REQUEST", "username":"testuser"}'                        | AcceptRequest       | { req -> (req as AcceptRequest).username == 'testuser' }
         '{"type": "WRITE_MESSAGE", "username":"testuser","content":"testMessage"}' | WriteMessageRequest | { req -> (req as WriteMessageRequest).getContent() == "testMessage" }
         '{"type": "KEEP_ALIVE"}'                                                   | KeepAliveRequest    | { req -> (req as KeepAliveRequest).getType() == 'KEEP_ALIVE' }
+
     }
 }
