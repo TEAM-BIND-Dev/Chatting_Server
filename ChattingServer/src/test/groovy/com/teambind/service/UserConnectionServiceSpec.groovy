@@ -28,7 +28,7 @@ class UserConnectionServiceSpec extends Specification {
         userConnectionLimitService = new UserConnectionLimitService(
                 userRepository, userConnectionRepository
         )
-        userConnectionService = new UserConnectionService(userService,userConnectionLimitService, userConnectionRepository)
+        userConnectionService = new UserConnectionService(userService, userConnectionLimitService, userConnectionRepository)
     }
 
     def "사용자 연결 신청에 대한 테스트."() {
@@ -66,21 +66,20 @@ class UserConnectionServiceSpec extends Specification {
         userRepository.findForUpdateByUserId(_ as Long) >> {
             Long userId ->
                 def entity = new UserEntity()
-                if(userId == 5 || userId == 7)
-                {
+                if (userId == 5 || userId == 7) {
                     entity.setConnectionCount(1000);
                 }
 
                 return Optional.of(entity)
         }
 
-        userConnectionRepository.findByPartnerUserAIdAndPartnerUserBIdAndStatus(_ as Long ,_ as Long , _ as UserConnectionStatus) >> {
+        userConnectionRepository.findByPartnerUserAIdAndPartnerUserBIdAndStatus(_ as Long, _ as Long, _ as UserConnectionStatus) >> {
             inviterUserId.flatMap { UserId inviter ->
                 Optional.of(new UserConnectionEntity(senderUserId.id(), targetUserId.id(), UserConnectionStatus.PENDING, inviter.id()))
             }
         }
 
-        userConnectionRepository.findByPartnerUserAIdAndPartnerUserBId(_ as Long , _ as Long) >> {
+        userConnectionRepository.findByPartnerUserAIdAndPartnerUserBId(_ as Long, _ as Long) >> {
             Optional.of(Stub(UserConnectionStatusProjection)
                     {
                         getStatus() >> beforeConnectionStatus.name()
@@ -88,13 +87,14 @@ class UserConnectionServiceSpec extends Specification {
         }
 
         userConnectionRepository.findInvitorUserIdByPartnerUserAIdAndPartnerUserBId(_ as Long, _ as Long) >> {
-            inviterUserId.flatMap { UserId invitor -> {
-                Optional.of(Stub(InvitorUserIdProjection) {
-                    getInvitorUserId() >> invitor.id()
-                })
-            }}
+            inviterUserId.flatMap { UserId invitor ->
+                {
+                    Optional.of(Stub(InvitorUserIdProjection) {
+                        getInvitorUserId() >> invitor.id()
+                    })
+                }
+            }
         }
-
 
 
         when:
@@ -105,9 +105,13 @@ class UserConnectionServiceSpec extends Specification {
         result == expectedResult
 
         where:
-        scenario        | senderUserId  | senderUsername | targetUserId  | targetUsername | inviterUserId              | beforeConnectionStatus       | expectedResult
-        "Accept invite" | new UserId(1) | 'userA'        | new UserId(2) | 'userB'        | Optional.of(new UserId(2)) | UserConnectionStatus.PENDING | Pair.of(Optional.of(new UserId(2)), 'userA')
-        "Already Connected" | new UserId(1) | 'userA'        | new UserId(2) | 'userB'        | Optional.of(new UserId(2)) | UserConnectionStatus.ACCEPTED | Pair.of(Optional.empty(),"already accepted to " + targetUsername)
+        scenario            | senderUserId  | senderUsername | targetUserId  | targetUsername | inviterUserId              | beforeConnectionStatus        | expectedResult
+        "Accept invite"     | new UserId(1) | 'userA'        | new UserId(2) | 'userB'        | Optional.of(new UserId(2)) | UserConnectionStatus.PENDING  | Pair.of(Optional.of(new UserId(2)), 'userA')
+        "Already Connected" | new UserId(1) | 'userA'        | new UserId(2) | 'userB'        | Optional.of(new UserId(2)) | UserConnectionStatus.ACCEPTED | Pair.of(Optional.empty(), "already accepted to " + targetUsername)
+        "Self Accept" | new UserId(1) | 'userA'        | new UserId(1) | 'userA'        | Optional.of(new UserId(1)) | UserConnectionStatus.PENDING | Pair.of(Optional.empty(), "cannot accept self")
+        "Accept wrong invite"     | new UserId(1) | 'userA'        | new UserId(4) | 'userD'        | Optional.of(new UserId(2)) | UserConnectionStatus.PENDING  | Pair.of(Optional.empty(), 'invalid username')
+
+
 
 
     }
