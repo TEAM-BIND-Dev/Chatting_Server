@@ -46,6 +46,9 @@ public class UserConnectionService {
 		UserConnectionStatus status = getStatus(invitoerUserId, partnerUserId);
 		return switch (status) {
 			case NONE, DISCONNECTED -> {
+				if(userService.getConnectionCount(invitoerUserId).filter(count -> count >= userConnectionLimitService.getLimitConnections()).isPresent()){
+					yield Pair.of(Optional.empty(), "Connection limit reached.");
+				}
 				Optional<String> invitorUsername = userService.getUsername(invitoerUserId);
 				if (invitorUsername.isEmpty()) {
 					log.warn("invitor username is empty. {}", invitoerUserId);

@@ -3,6 +3,7 @@ package com.teambind.chattingserver.service;
 
 import com.teambind.auth.dto.InviteCode;
 import com.teambind.auth.dto.User;
+import com.teambind.auth.dto.projection.CountProjection;
 import com.teambind.auth.dto.projection.UsernameProjection;
 import com.teambind.auth.entity.UserEntity;
 import com.teambind.auth.entity.UserId;
@@ -45,6 +46,12 @@ public class UserService {
 		return userRepository.findInviteCodeByUserId(userId.id()).map(
 				inviteCode -> new InviteCode(inviteCode.getConnectionInviteCode())
 		);
+	}
+	
+	public Optional<Integer> getConnectionCount(UserId userId)
+	{
+		return userRepository.findCountByUserId(userId.id())
+				.map(CountProjection::getConnectionCount);
 	}
 	
 	@Transactional
