@@ -8,6 +8,7 @@ import com.teambind.constant.MessageType;
 public class WriteMessageRequest extends BaseRequest {
 	private final String username;
 	private final String content;
+	
 	@JsonCreator
 	public WriteMessageRequest(
 			@JsonProperty("username") String username,

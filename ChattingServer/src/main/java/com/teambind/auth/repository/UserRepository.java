@@ -1,5 +1,6 @@
 package com.teambind.auth.repository;
 
+import com.teambind.auth.dto.projection.InviteCodeProjection;
 import com.teambind.auth.dto.projection.UsernameProjection;
 import com.teambind.auth.entity.UserEntity;
 import jakarta.persistence.LockModeType;
@@ -20,5 +21,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	
 	@Lock(LockModeType.PESSIMISTIC_WRITE)
 	Optional<UserEntity> findForUpdateByUserId(@NonNull Long userId);
+	
+	Optional<InviteCodeProjection> findInviteCodeByUserId(@NonNull Long userId);
 	
 }

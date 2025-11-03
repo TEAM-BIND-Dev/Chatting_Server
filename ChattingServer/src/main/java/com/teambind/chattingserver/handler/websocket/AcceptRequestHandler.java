@@ -2,13 +2,13 @@ package com.teambind.chattingserver.handler.websocket;
 
 import com.teambind.auth.entity.UserId;
 import com.teambind.chattingserver.dto.websocket.inbound.AcceptRequest;
-import com.teambind.chattingserver.dto.websocket.inbound.InviteRequest;
-import com.teambind.chattingserver.dto.websocket.outbound.*;
+import com.teambind.chattingserver.dto.websocket.outbound.AcceptNotification;
+import com.teambind.chattingserver.dto.websocket.outbound.AcceptResponse;
+import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
 import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.Constants;
 import com.teambind.constant.MessageType;
-import com.teambind.constant.UserConnectionStatus;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -32,10 +32,10 @@ public class AcceptRequestHandler implements BaseRequestHandler<AcceptRequest> {
 		Pair<Optional<UserId>, String> result = userConnectionService.accept(acceptorUserId, request.getUsername());
 		
 		result.getFirst().ifPresentOrElse(
-				invitorUserId ->{
+				invitorUserId -> {
 					sessionManager.sendMessage(senderSession, new AcceptResponse(request.getUsername()));
 					String acceptorUsername = result.getSecond();
-					sessionManager.sendMessage(sessionManager.getSession(invitorUserId), new AcceptNotification(acceptorUsername    ));
+					sessionManager.sendMessage(sessionManager.getSession(invitorUserId), new AcceptNotification(acceptorUsername));
 				},
 				() -> sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.ACCEPT_REQUEST, result.getSecond())));
 	}

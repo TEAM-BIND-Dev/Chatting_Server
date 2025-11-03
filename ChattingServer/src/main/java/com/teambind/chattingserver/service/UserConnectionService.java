@@ -71,59 +71,51 @@ public class UserConnectionService {
 		};
 	}
 	
-	public Pair<Optional<UserId>,String> accept(UserId accepterUserId, String invitorUsername){
+	public Pair<Optional<UserId>, String> accept(UserId accepterUserId, String invitorUsername) {
 		Optional<UserId> userId = userService.getUserId(invitorUsername);
-		if(userId.isEmpty())
-		{
+		if (userId.isEmpty()) {
 			log.info("invitor username is empty. {}", invitorUsername);
 			return Pair.of(Optional.empty(), "invalid username");
 		}
 		
 		UserId inviterUserId = userId.get();
 		
-		if(accepterUserId.equals(inviterUserId ))
-		{
+		if (accepterUserId.equals(inviterUserId)) {
 			log.info("cannot accept self. {}", accepterUserId);
 			return Pair.of(Optional.empty(), "cannot accept self");
 		}
 		
-		if(getInvitorUserId(accepterUserId, inviterUserId)
+		if (getInvitorUserId(accepterUserId, inviterUserId)
 				.filter(invitationSenderUserId -> invitationSenderUserId.equals(inviterUserId))
-				.isEmpty()){
+				.isEmpty()) {
 			return Pair.of(Optional.empty(), "invalid username");
 		}
 		
 		UserConnectionStatus userConnectionStatus = getStatus(inviterUserId, accepterUserId);
-		if(userConnectionStatus.equals(UserConnectionStatus.ACCEPTED))
-		{
+		if (userConnectionStatus.equals(UserConnectionStatus.ACCEPTED)) {
 			log.info("{} already accepted to {}", accepterUserId, inviterUserId);
 			return Pair.of(Optional.empty(), "already accepted to " + invitorUsername);
 		}
 		
-		if(!userConnectionStatus.equals(UserConnectionStatus.PENDING))
-		{
+		if (!userConnectionStatus.equals(UserConnectionStatus.PENDING)) {
 			return Pair.of(Optional.empty(), "Accept fail");
 		}
 		
 		Optional<String> acceptorUsername = userService.getUsername(accepterUserId);
-		if(acceptorUsername.isEmpty()){
+		if (acceptorUsername.isEmpty()) {
 			log.info("acceptor username is empty. {}", accepterUserId);
 			return Pair.of(Optional.empty(), "Accept fail");
 		}
 		
-		try{
+		try {
 			userConnectionLimitService.accept(accepterUserId, inviterUserId);
 			return Pair.of(Optional.of(inviterUserId), acceptorUsername.get());
-		} catch (EntityNotFoundException ex)
-		{
+		} catch (EntityNotFoundException ex) {
 			log.error("accept error : {}", ex.getMessage());
 			return Pair.of(Optional.empty(), "accept error");
-		}catch (IllegalStateException ex)
-		{
+		} catch (IllegalStateException ex) {
 			return Pair.of(Optional.empty(), ex.getMessage());
 		}
-		
-		
 		
 		
 	}

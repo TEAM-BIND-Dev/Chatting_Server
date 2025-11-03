@@ -2,8 +2,6 @@ package com.teambind.auth.entity;
 
 import com.teambind.common.config.baseEntity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.Objects;
@@ -32,14 +30,6 @@ public class UserEntity extends BaseEntity {
 	@Column(name = "connection_count", nullable = false)
 	private int connectionCount;
 	
-	public int getConnectionCount() {
-		return connectionCount;
-	}
-	
-	public void setConnectionCount(int connectionCount) {
-		this.connectionCount = connectionCount;
-	}
-	
 	protected UserEntity() {
 		// JPA requires a no-arg constructor
 	}
@@ -50,6 +40,13 @@ public class UserEntity extends BaseEntity {
 		this.connectionInviteCode = UUID.randomUUID().toString().replace("-", "");
 	}
 	
+	public int getConnectionCount() {
+		return connectionCount;
+	}
+	
+	public void setConnectionCount(int connectionCount) {
+		this.connectionCount = connectionCount;
+	}
 	
 	@Override
 	public boolean equals(Object o) {

@@ -1,6 +1,6 @@
 package com.teambind.common.config.auth;
 
-import com.teambind.auth.handler.WebSocketHandler;
+import com.teambind.chattingserver.handler.WebSocketHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;

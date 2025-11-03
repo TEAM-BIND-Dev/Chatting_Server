@@ -41,6 +41,12 @@ public class UserService {
 				entity -> new User(new UserId(entity.getUserId()), entity.getUsername()));
 	}
 	
+	public Optional<InviteCode> getInviteCode(UserId userId) {
+		return userRepository.findInviteCodeByUserId(userId.id()).map(
+				inviteCode -> new InviteCode(inviteCode.getConnectionInviteCode())
+		);
+	}
+	
 	@Transactional
 	public UserId addUser(String username, String password) {
 		UserEntity userEntity = userRepository.save(
