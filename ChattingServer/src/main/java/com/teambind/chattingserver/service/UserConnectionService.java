@@ -2,6 +2,7 @@ package com.teambind.chattingserver.service;
 
 import com.teambind.auth.dto.InviteCode;
 import com.teambind.auth.dto.User;
+import com.teambind.auth.dto.projection.UserIdUsernameProjection;
 import com.teambind.auth.entity.UserConnectionEntity;
 import com.teambind.auth.entity.UserId;
 import com.teambind.auth.repository.UserConnectionRepository;
@@ -13,7 +14,10 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class UserConnectionService {
@@ -27,6 +31,35 @@ public class UserConnectionService {
 		this.userConnectionLimitService = userConnectionLimitService;
 		this.userConnectionRepository = userConnectionRepository;
 	}
+	
+	
+	public List<User> getUsersByStatus(UserId userId, UserConnectionStatus status) {
+		List<UserIdUsernameProjection> userA = userConnectionRepository.findUserConnectionPartnerAUserIdUserIdANdStatus(userId.id(), status);
+		List<UserIdUsernameProjection> userB = userConnectionRepository.findUserConnectionPartnerBUserIdUserIdANdStatus(userId.id(), status);
+		return Stream.concat(userA.stream(), userB.stream()).map(
+				item -> new User( new UserId(item.getUserId()), item.getUsername())
+		).toList();
+	}
+	
+	public Pair<Boolean, String> reject(UserId senderUserId, String inviterUsername) {
+		return userService.getUserId(inviterUsername)
+				.filter(userId -> !userId.equals(senderUserId))
+				.filter(
+						inviterUserId -> getInvitorUserId(senderUserId, inviterUserId).filter(
+								invitationSenderUserId -> invitationSenderUserId.equals(inviterUserId)).isPresent())
+				.filter(inviterUserId -> getStatus(inviterUserId,senderUserId).equals(UserConnectionStatus.PENDING))
+				.map(inviterUserId -> {
+					try{
+						setStatus(inviterUserId, senderUserId, UserConnectionStatus.REJECTED);
+						return Pair.of(true, inviterUsername);
+					}catch(Exception e){
+						log.error("Set rejected failed. cause : {}", e.getMessage());
+						return Pair.of(false, "Rejected failed");
+					}
+				}).orElse(Pair.of(false, "Rejected failed"));
+	}
+	
+	
 	
 	public Pair<Optional<UserId>, String> invite(UserId invitoerUserId, InviteCode inviteCode) {
 		Optional<User> partner = userService.getUser(inviteCode);
