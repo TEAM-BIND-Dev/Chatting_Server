@@ -12,8 +12,12 @@ public class FetchUserInviteCodeResponse extends BaseMessage {
 	
 	
 	
-	public FetchUserInviteCodeResponse(InviteCode inviteCode, UserConnectionStatus status) {
+	public FetchUserInviteCodeResponse(InviteCode inviteCode) {
 		super(MessageType.FETCH_USER_INVITE_CODE_RESPONSE);
 		this.inviteCode = inviteCode;
+	}
+	
+	public InviteCode getInviteCode() {
+		return inviteCode;
 	}
 }
