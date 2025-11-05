@@ -2,6 +2,7 @@ package com.teambind.messagesystem.handler;
 
 import com.teambind.messagesystem.dto.websocket.inbound.BaseMessage;
 import com.teambind.messagesystem.dto.websocket.inbound.FetchUserInviteCodeResponse;
+import com.teambind.messagesystem.dto.websocket.inbound.InviteResponse;
 import com.teambind.messagesystem.dto.websocket.inbound.MessageNotification;
 import com.teambind.messagesystem.service.TerminalService;
 import com.teambind.messagesystem.util.JsonUtil;
@@ -20,6 +21,8 @@ public class InboundMessageHandler {
 		JsonUtil.fromJson(payload, BaseMessage.class).ifPresent(message ->{
 			if(message instanceof MessageNotification messageNotification){
 				message(messageNotification);
+			} else if (message instanceof FetchUserInviteCodeResponse fetchUserInviteCodeResponse) {
+				fetchUserInviteCode(fetchUserInviteCodeResponse);
 			}
 			
 		});
@@ -33,6 +36,11 @@ public class InboundMessageHandler {
 	private void fetchUserInviteCode(FetchUserInviteCodeResponse fetchUserInviteCodeResponse){
 		terminalService.printSystemMessage(
 				"My invite code is: %s" .formatted(fetchUserInviteCodeResponse.getInviteCode()));
+	}
+	private void invite(InviteResponse inviteResponse){
+		terminalService.printSystemMessage(
+				"Invite %s result : %s".formatted(inviteResponse.getInviteCode(), inviteResponse.getStatus())
+		);
 	}
 	
 }

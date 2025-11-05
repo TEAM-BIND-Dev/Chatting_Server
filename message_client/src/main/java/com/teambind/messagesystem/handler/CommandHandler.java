@@ -1,6 +1,9 @@
 package com.teambind.messagesystem.handler;
 
 
+import com.teambind.messagesystem.dto.InviteCode;
+import com.teambind.messagesystem.dto.websocket.outbound.FetchUserInviteCodeRequest;
+import com.teambind.messagesystem.dto.websocket.outbound.InviteRequest;
 import com.teambind.messagesystem.service.RestApiService;
 import com.teambind.messagesystem.service.TerminalService;
 import com.teambind.messagesystem.service.WebSocketService;
@@ -35,6 +38,10 @@ public class CommandHandler {
 		commands.put("unregister", this::unregister);
 		commands.put("login", this::login);
 		commands.put("logout", this::logout);
+		
+		commands.put("inviteCode", this::inviteCode);
+		commands.put("invite", this::invite);
+		
 		commands.put("clear", this::clear);
 		commands.put("exit", this::exit);
 		commands.put("help", this::help);
@@ -77,6 +84,22 @@ public class CommandHandler {
 		return true;
 	}
 	
+	private Boolean inviteCode(String[] params){
+		webSocketService.sendMessage(new FetchUserInviteCodeRequest());
+		terminalService.printSystemMessage("Request get invite code...");
+		return true;
+	}
+	
+	private Boolean invite(String[] params) {
+		if(params.length > 1)
+		{
+			webSocketService.sendMessage(new InviteRequest(new InviteCode(params[0])));
+			terminalService.printSystemMessage("Request user Invite");
+			return true;
+		}
+		return true;
+	}
+	
 	
 	private Boolean logout(String[] params) {
 		webSocketService.closeSession();
@@ -108,7 +131,10 @@ public class CommandHandler {
 						'/unregister' Unregister a user. ex: /unregister
 						'/login' Login a user. ex: /login <username> <password>
 						'/logout' Logout a user. ex: /logout
+						'/inviteCode' Get invite code. ex: /inviteCode
+						'/invite' Invite a user to connect. ex: /invite <inviteCode>
 						'/clear' Clear terminal. ex: /clear
+						'/exit' Exit the program. ex: /exit
 						"""
 		);
 		return true;

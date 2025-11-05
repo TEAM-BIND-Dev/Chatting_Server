@@ -16,4 +16,12 @@ public class InviteResponse extends BaseMessage {
 		this.inviteCode = inviteCode;
 		this.status = status;
 	}
+	
+	public UserConnectionStatus getStatus() {
+		return status;
+	}
+	
+	public InviteCode getInviteCode() {
+		return inviteCode;
+	}
 }
