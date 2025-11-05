@@ -2,7 +2,7 @@ package com.teambind.messagesystem.dto.websocket.outbound;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.teambind.messagesystem.contents.MessageType;
+import com.teambind.messagesystem.constant.MessageType;
 
 
 public class MessageRequest extends BaseRequest {
@@ -14,7 +14,7 @@ public class MessageRequest extends BaseRequest {
 	public MessageRequest(
 			@JsonProperty("username") String username,
 			@JsonProperty("content") String content) {
-		super(MessageType.MESSAGE);
+		super(MessageType.WRITE_MESSAGE);
 		this.username = username;
 		this.content = content;
 	}

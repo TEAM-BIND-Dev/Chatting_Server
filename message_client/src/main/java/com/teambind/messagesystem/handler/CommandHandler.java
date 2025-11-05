@@ -37,6 +37,7 @@ public class CommandHandler {
 		commands.put("logout", this::logout);
 		commands.put("clear", this::clear);
 		commands.put("exit", this::exit);
+		commands.put("help", this::help);
 	}
 	
 	private Boolean register(String[] params) {
@@ -94,9 +95,23 @@ public class CommandHandler {
 	}
 	
 	private Boolean exit(String[] params) {
+		logout(params);
 		terminalService.printSystemMessage("Exiting...");
-		webSocketService.closeSession();
 		return false;
+	}
+	
+	private Boolean help(String[] params) {
+		terminalService.printSystemMessage(
+				"""
+						Commands:
+						'/register' Register a new user. ex: /register <username> <password>
+						'/unregister' Unregister a user. ex: /unregister
+						'/login' Login a user. ex: /login <username> <password>
+						'/logout' Logout a user. ex: /logout
+						'/clear' Clear terminal. ex: /clear
+						"""
+		);
+		return true;
 	}
 	
 }
