@@ -87,8 +87,8 @@ public class UserConnectionLimitService {
 			throw new IllegalStateException("Count is already zero. userId = " + secondUserId);
 		}
 		
-		firstUserEntity.setConnectionCount(firstConnectionCount -1);
-		secondUserEntity.setConnectionCount(secondConnectionCount -1);
+		firstUserEntity.setConnectionCount(firstConnectionCount - 1);
+		secondUserEntity.setConnectionCount(secondConnectionCount - 1);
 		userConnectionEntity.setStatus(UserConnectionStatus.DISCONNECTED);
 		
 		userConnectionRepository.save(userConnectionEntity);

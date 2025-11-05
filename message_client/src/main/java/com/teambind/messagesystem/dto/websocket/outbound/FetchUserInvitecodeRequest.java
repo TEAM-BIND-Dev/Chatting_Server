@@ -1,13 +1,11 @@
-package com.teambind.chattingserver.dto.websocket.inbound;
+package com.teambind.messagesystem.dto.websocket.outbound;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.teambind.constant.MessageType;
 
+import com.teambind.messagesystem.constant.MessageType;
 
 public class FetchUserInvitecodeRequest extends BaseRequest {
 	
 	
-	@JsonCreator
 	public FetchUserInvitecodeRequest() {
 		super(MessageType.FETCH_USER_INVITE_CODE_REQUEST);
 		

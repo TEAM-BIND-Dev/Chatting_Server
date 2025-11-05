@@ -1,12 +1,10 @@
-package com.teambind.chattingserver.dto.websocket.outbound;
+package com.teambind.messagesystem.dto.websocket.inbound;
 
-import com.teambind.auth.dto.Connection;
-import com.teambind.constant.MessageType;
-import lombok.Getter;
+import com.teambind.messagesystem.constant.MessageType;
+import com.teambind.messagesystem.dto.Connection;
 
 import java.util.List;
 
-@Getter
 public class FetchConnectionsResponse extends BaseMessage {
 	private final List<Connection> connections;
 	

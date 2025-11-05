@@ -38,7 +38,7 @@ class UserConnectionServiceSpec extends Specification {
                 getStatus() >> beforeConnectionStatus.name()
             })
         }
-        userService.getConnectionCount(senderUserId) >> {senderUserId.id() != 8 ? Optional.of(0) : Optional.of(1000)}
+        userService.getConnectionCount(senderUserId) >> { senderUserId.id() != 8 ? Optional.of(0) : Optional.of(1000) }
 
 
         when:

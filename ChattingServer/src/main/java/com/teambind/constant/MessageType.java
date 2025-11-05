@@ -16,7 +16,6 @@ public class MessageType {
 	public static final String WRITE_MESSAGE = "WRITE_MESSAGE";
 	
 	
-	
 	// Notification
 	public static final String KEEP_ALIVE = "KEEP_ALIVE";
 	public static final String NOTIFY_ACCEPT = "NOTIFY_ACCEPT";

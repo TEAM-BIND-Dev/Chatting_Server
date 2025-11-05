@@ -1,8 +1,9 @@
 package com.teambind.messagesystem;
 
 
-import com.teambind.messagesystem.dto.websocket.outbound.MessageRequest;
+import com.teambind.messagesystem.dto.websocket.outbound.WriteMessageRequest;
 import com.teambind.messagesystem.handler.CommandHandler;
+import com.teambind.messagesystem.handler.InboundMessageHandler;
 import com.teambind.messagesystem.handler.WebSocketMessageHandler;
 import com.teambind.messagesystem.handler.WebSocketSender;
 import com.teambind.messagesystem.service.RestApiService;
@@ -30,7 +31,8 @@ public class MessageClient {
 		RestApiService restApiService = new RestApiService(terminalService, BASE_URL);
 		WebSocketSender webSocketSender = new WebSocketSender(terminalService);
 		WebSocketService webSocketService = new WebSocketService(terminalService, webSocketSender, BASE_URL, WEBSOCKET_PATH);
-		webSocketService.setWebSocketMessageHandler(new WebSocketMessageHandler(terminalService));
+		InboundMessageHandler inboundMessageHandler = new InboundMessageHandler(terminalService);
+		webSocketService.setWebSocketMessageHandler(new WebSocketMessageHandler(terminalService, inboundMessageHandler));
 		CommandHandler commandHandler = new CommandHandler(restApiService, webSocketService, terminalService);
 		
 		while (true) {
@@ -47,7 +49,7 @@ public class MessageClient {
 				}
 			} else if (!input.isEmpty()) {
 				terminalService.PrintMessage("me", input);
-				webSocketService.sendMessage(new MessageRequest("test client", input));
+				webSocketService.sendMessage(new WriteMessageRequest("test client", input));
 				
 			}
 		}

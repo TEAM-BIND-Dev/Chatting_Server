@@ -1,25 +1,16 @@
 package com.teambind.chattingserver.handler.websocket;
 
 import com.teambind.auth.dto.Connection;
-import com.teambind.auth.dto.User;
 import com.teambind.auth.entity.UserId;
 import com.teambind.chattingserver.dto.websocket.inbound.FetchConnectionsRequest;
-import com.teambind.chattingserver.dto.websocket.inbound.InviteRequest;
-import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.FetchConnectionsResponse;
-import com.teambind.chattingserver.dto.websocket.outbound.InviteNotification;
-import com.teambind.chattingserver.dto.websocket.outbound.InviteResponse;
 import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.Constants;
-import com.teambind.constant.MessageType;
-import com.teambind.constant.UserConnectionStatus;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
 import java.util.List;
-import java.util.Optional;
 
 @Component
 public class FetchConnectionsRequestHandler implements BaseRequestHandler<FetchConnectionsRequest> {

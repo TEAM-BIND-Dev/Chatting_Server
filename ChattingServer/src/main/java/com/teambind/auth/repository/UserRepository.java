@@ -4,7 +4,6 @@ import com.teambind.auth.dto.projection.CountProjection;
 import com.teambind.auth.dto.projection.InviteCodeProjection;
 import com.teambind.auth.dto.projection.UsernameProjection;
 import com.teambind.auth.entity.UserEntity;
-import com.teambind.constant.UserConnectionStatus;
 import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;

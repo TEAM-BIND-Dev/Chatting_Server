@@ -1,7 +1,7 @@
 package com.teambind.messagesystem.handler;
 
 
-import com.teambind.messagesystem.dto.websocket.outbound.MessageRequest;
+import com.teambind.messagesystem.dto.websocket.outbound.WriteMessageRequest;
 import com.teambind.messagesystem.service.TerminalService;
 import com.teambind.messagesystem.util.JsonUtil;
 import jakarta.websocket.Session;
@@ -14,7 +14,7 @@ public class WebSocketSender {
 		this.terminalService = terminalService;
 	}
 	
-	public void sendMessage(Session session, MessageRequest messageRequest) {
+	public void sendMessage(Session session, WriteMessageRequest messageRequest) {
 		if (session != null && session.isOpen()) {
 			JsonUtil.toJson(messageRequest).ifPresent(payload -> {
 				session.getAsyncRemote()

@@ -1,10 +1,8 @@
-package com.teambind.chattingserver.dto.websocket.outbound;
+package com.teambind.messagesystem.dto.websocket.inbound;
 
-import com.teambind.auth.dto.InviteCode;
-import com.teambind.constant.MessageType;
-import lombok.Getter;
+import com.teambind.messagesystem.constant.MessageType;
+import com.teambind.messagesystem.dto.InviteCode;
 
-@Getter
 public class FetchUserInviteCodeResponse extends BaseMessage {
 	
 	private final InviteCode inviteCode;

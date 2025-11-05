@@ -2,7 +2,7 @@ package com.teambind.messagesystem.service;
 
 import com.teambind.messagesystem.dto.websocket.outbound.BaseRequest;
 import com.teambind.messagesystem.dto.websocket.outbound.KeepAliveRequest;
-import com.teambind.messagesystem.dto.websocket.outbound.MessageRequest;
+import com.teambind.messagesystem.dto.websocket.outbound.WriteMessageRequest;
 import com.teambind.messagesystem.handler.WebSocketMessageHandler;
 import com.teambind.messagesystem.handler.WebSocketSender;
 import com.teambind.messagesystem.handler.WebSocketSessionHandler;
@@ -80,7 +80,7 @@ public class WebSocketService {
 	public void sendMessage(BaseRequest baseRequest) {
 		
 		if (session != null && session.isOpen()) {
-			if (baseRequest instanceof MessageRequest messageRequest) {
+			if (baseRequest instanceof WriteMessageRequest messageRequest) {
 				webSocketSender.sendMessage(session, messageRequest);
 				return;
 			}

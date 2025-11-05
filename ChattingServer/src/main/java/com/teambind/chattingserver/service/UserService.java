@@ -48,8 +48,7 @@ public class UserService {
 		);
 	}
 	
-	public Optional<Integer> getConnectionCount(UserId userId)
-	{
+	public Optional<Integer> getConnectionCount(UserId userId) {
 		return userRepository.findCountByUserId(userId.id())
 				.map(CountProjection::getConnectionCount);
 	}

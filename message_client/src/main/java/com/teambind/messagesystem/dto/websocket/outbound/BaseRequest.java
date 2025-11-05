@@ -12,3 +12,4 @@ public abstract class BaseRequest {
 		return type;
 	}
 }
+

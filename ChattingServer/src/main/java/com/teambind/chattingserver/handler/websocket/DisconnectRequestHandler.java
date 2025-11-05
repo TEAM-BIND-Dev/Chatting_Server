@@ -2,11 +2,8 @@ package com.teambind.chattingserver.handler.websocket;
 
 import com.teambind.auth.entity.UserId;
 import com.teambind.chattingserver.dto.websocket.inbound.DisconnectRequest;
-import com.teambind.chattingserver.dto.websocket.inbound.InviteRequest;
 import com.teambind.chattingserver.dto.websocket.outbound.DisconnectResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
-import com.teambind.chattingserver.dto.websocket.outbound.InviteNotification;
-import com.teambind.chattingserver.dto.websocket.outbound.InviteResponse;
 import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.Constants;
@@ -15,8 +12,6 @@ import com.teambind.constant.UserConnectionStatus;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
-
-import java.util.Optional;
 
 @Component
 public class DisconnectRequestHandler implements BaseRequestHandler<DisconnectRequest> {
@@ -33,11 +28,9 @@ public class DisconnectRequestHandler implements BaseRequestHandler<DisconnectRe
 	public void handleRequest(WebSocketSession senderSession, DisconnectRequest request) {
 		UserId senderUserId = (UserId) senderSession.getAttributes().get(Constants.USER_ID.getValue());
 		Pair<Boolean, String> result = userConnectionService.disconnect(senderUserId, request.getUsername());
-		if(result.getFirst())
-		{
+		if (result.getFirst()) {
 			sessionManager.sendMessage(senderSession, new DisconnectResponse(request.getUsername(), UserConnectionStatus.DISCONNECTED));
-		}
-		else {
+		} else {
 			String errorMessage = result.getSecond();
 			sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.DISCONNECT_REQUEST, errorMessage));
 		}
