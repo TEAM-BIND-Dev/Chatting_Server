@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Service
@@ -37,7 +36,7 @@ public class UserConnectionService {
 		List<UserIdUsernameProjection> userA = userConnectionRepository.findUserConnectionPartnerAUserIdUserIdANdStatus(userId.id(), status);
 		List<UserIdUsernameProjection> userB = userConnectionRepository.findUserConnectionPartnerBUserIdUserIdANdStatus(userId.id(), status);
 		return Stream.concat(userA.stream(), userB.stream()).map(
-				item -> new User( new UserId(item.getUserId()), item.getUsername())
+				item -> new User(new UserId(item.getUserId()), item.getUsername())
 		).toList();
 	}
 	
@@ -47,18 +46,17 @@ public class UserConnectionService {
 				.filter(
 						inviterUserId -> getInvitorUserId(senderUserId, inviterUserId).filter(
 								invitationSenderUserId -> invitationSenderUserId.equals(inviterUserId)).isPresent())
-				.filter(inviterUserId -> getStatus(inviterUserId,senderUserId).equals(UserConnectionStatus.PENDING))
+				.filter(inviterUserId -> getStatus(inviterUserId, senderUserId).equals(UserConnectionStatus.PENDING))
 				.map(inviterUserId -> {
-					try{
+					try {
 						setStatus(inviterUserId, senderUserId, UserConnectionStatus.REJECTED);
 						return Pair.of(true, inviterUsername);
-					}catch(Exception e){
+					} catch (Exception e) {
 						log.error("Set rejected failed. cause : {}", e.getMessage());
 						return Pair.of(false, "Rejected failed");
 					}
 				}).orElse(Pair.of(false, "Rejected failed"));
 	}
-	
 	
 	
 	public Pair<Optional<UserId>, String> invite(UserId invitoerUserId, InviteCode inviteCode) {
@@ -79,7 +77,7 @@ public class UserConnectionService {
 		UserConnectionStatus status = getStatus(invitoerUserId, partnerUserId);
 		return switch (status) {
 			case NONE, DISCONNECTED -> {
-				if(userService.getConnectionCount(invitoerUserId).filter(count -> count >= userConnectionLimitService.getLimitConnections()).isPresent()){
+				if (userService.getConnectionCount(invitoerUserId).filter(count -> count >= userConnectionLimitService.getLimitConnections()).isPresent()) {
 					yield Pair.of(Optional.empty(), "Connection limit reached.");
 				}
 				Optional<String> invitorUsername = userService.getUsername(invitoerUserId);
@@ -154,6 +152,30 @@ public class UserConnectionService {
 		}
 		
 		
+	}
+	
+	public Pair<Boolean, String> disconnect(UserId senderUserId, String partnerUserName) {
+		return userService.getUserId(partnerUserName)
+				.filter(partnerUserId -> !senderUserId.equals(partnerUserId))
+				.map((partnerUserId ->
+				{
+					UserConnectionStatus userConnectionStatus = getStatus(senderUserId, partnerUserId);
+					try {
+						if (userConnectionStatus.equals(UserConnectionStatus.ACCEPTED)) {
+							userConnectionLimitService.disconnect(senderUserId, partnerUserId);
+							return Pair.of(true, partnerUserName);
+						} else if (userConnectionStatus == UserConnectionStatus.REJECTED //
+								&& getInvitorUserId(senderUserId, partnerUserId)
+								.filter(inviterUserId -> inviterUserId.equals(partnerUserId)).isPresent()) {
+							setStatus(senderUserId, partnerUserId, UserConnectionStatus.DISCONNECTED);
+							return Pair.of(true, partnerUserName);
+						}
+					} catch (IllegalStateException ex) {
+						log.error("Disconnect fail. cause : {}", ex.getMessage());
+					}
+					return Pair.of(false, "Disconnect fail.");
+					
+				})).orElse(Pair.of(false, "Disconnect fail."));
 	}
 	
 	private Optional<UserId> getInvitorUserId(UserId partnerAuserId, UserId partnerBuserId) {

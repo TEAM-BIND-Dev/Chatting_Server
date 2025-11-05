@@ -20,12 +20,12 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	private static final Logger log = LoggerFactory.getLogger(WebSocketHandler.class);
 	private final JsonUtil jsonUtil;
 	private final WebSocketSessionManager sessionManager;
-	private final RequestHandlerDispatcher requestHandlerDispatcher;
+	private final RequestDispatcher requestDispatcher;
 	
-	public WebSocketHandler(JsonUtil jsonUtil, WebSocketSessionManager sessionManager, RequestHandlerDispatcher requestHandlerDispatcher) {
+	public WebSocketHandler(JsonUtil jsonUtil, WebSocketSessionManager sessionManager, RequestDispatcher requestDispatcher) {
 		this.jsonUtil = jsonUtil;
 		this.sessionManager = sessionManager;
-		this.requestHandlerDispatcher = requestHandlerDispatcher;
+		this.requestDispatcher = requestDispatcher;
 	}
 	
 	
@@ -42,7 +42,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		String payload = message.getPayload();
 		log.info("Message Received: {} from {}", payload, senderSession.getId());
 		jsonUtil.fromJson(payload, BaseRequest.class).ifPresent(baseRequest -> {
-			requestHandlerDispatcher.dispatch(senderSession, baseRequest);
+			requestDispatcher.dispatch(senderSession, baseRequest);
 		});
 	}
 	

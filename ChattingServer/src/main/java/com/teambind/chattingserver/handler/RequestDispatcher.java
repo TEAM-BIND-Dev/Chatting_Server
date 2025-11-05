@@ -16,13 +16,13 @@ import java.util.Map;
 
 @Component
 @SuppressWarnings("rawtypes,unchecked")
-public class RequestHandlerDispatcher {
+public class RequestDispatcher {
 	
-	private static final Logger log = LoggerFactory.getLogger(RequestHandlerDispatcher.class);
+	private static final Logger log = LoggerFactory.getLogger(RequestDispatcher.class);
 	private final Map<Class<? extends BaseRequest>, BaseRequestHandler<? extends BaseRequest>> handlerMap = new HashMap<>();
 	private final ListableBeanFactory beanFactory;
 	
-	public RequestHandlerDispatcher(ListableBeanFactory beanFactory) {
+	public RequestDispatcher(ListableBeanFactory beanFactory) {
 		this.beanFactory = beanFactory;
 	}
 	
