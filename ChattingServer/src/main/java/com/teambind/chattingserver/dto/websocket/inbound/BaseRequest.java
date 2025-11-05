@@ -18,7 +18,8 @@ import lombok.Getter;
 		@JsonSubTypes.Type(value  = FetchConnectionsRequest.class,  name =  MessageType.FETCH_CONNECTIONS_REQUEST),
 		@JsonSubTypes.Type(value = InviteRequest.class, name = MessageType.INVITE_REQUEST),
 		@JsonSubTypes.Type(value = AcceptRequest.class, name = MessageType.ACCEPT_REQUEST),
-		@JsonSubTypes.Type(value = RejectRequest.class, name = MessageType.REJECT_REQUEST)
+		@JsonSubTypes.Type(value = RejectRequest.class, name = MessageType.REJECT_REQUEST),
+		@JsonSubTypes.Type(value = DisconnectRequest.class, name = MessageType.DISCONNECT_REQUEST)
 })
 @Getter
 public abstract class BaseRequest {
