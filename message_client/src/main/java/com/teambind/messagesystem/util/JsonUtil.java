@@ -18,7 +18,8 @@ public class JsonUtil {
 		try {
 			return Optional.of(objectMapper.readValue(json, clazz));
 		} catch (Exception e) {
-			if (terminalService != null) {
+			if (terminalService != null)
+			{
 				terminalService.printSystemMessage("Failed to convert JSON to object: " + e.getMessage());
 			}
 			return Optional.empty();

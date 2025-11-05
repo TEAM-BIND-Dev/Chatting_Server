@@ -62,3 +62,14 @@
 1761646453014:/register user1 pass1
 1761646483990:/register user2 pass2
 1761646508930:/login user1 pass1
+1762343330028:/help
+1762343343177:/register user1 pass1
+1762343349522:/login user1 pass1
+1762343359788:/register user2 pass2
+1762343365201:/login user2 pass2
+1762343380530:/login user3 pass3
+1762343389446:/register user3 pass3
+1762343391201:/login user3 pass3
+1762343407581:/connections
+1762343416255:/login user3 pass3
+1762343429156:/connections

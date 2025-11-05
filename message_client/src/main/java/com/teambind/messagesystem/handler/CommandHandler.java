@@ -1,9 +1,9 @@
 package com.teambind.messagesystem.handler;
 
 
+import com.teambind.messagesystem.constant.UserConnectionStatus;
 import com.teambind.messagesystem.dto.InviteCode;
-import com.teambind.messagesystem.dto.websocket.outbound.FetchUserInviteCodeRequest;
-import com.teambind.messagesystem.dto.websocket.outbound.InviteRequest;
+import com.teambind.messagesystem.dto.websocket.outbound.*;
 import com.teambind.messagesystem.service.RestApiService;
 import com.teambind.messagesystem.service.TerminalService;
 import com.teambind.messagesystem.service.WebSocketService;
@@ -41,8 +41,16 @@ public class CommandHandler {
 		
 		commands.put("inviteCode", this::inviteCode);
 		commands.put("invite", this::invite);
+		commands.put("accept", this::accept);
+		commands.put("reject", this::reject);
+		
 		
 		commands.put("clear", this::clear);
+		
+		commands.put("pending", this::pending);
+		commands.put("connections", this::connections);
+		commands.put("disconnect", this::disconnect);
+		
 		commands.put("exit", this::exit);
 		commands.put("help", this::help);
 	}
@@ -59,6 +67,13 @@ public class CommandHandler {
 		return true;
 	}
 	
+	private Boolean accept(String[] parms){
+		if(parms.length >0){
+			webSocketService.sendMessage(new AcceptRequest(parms[0]));
+			terminalService.printSystemMessage("Accept accept invite");
+		}
+		return true;
+	}
 	private Boolean unregister(String[] params) {
 		webSocketService.closeSession();
 		if (restApiService.unregister()) {
@@ -84,9 +99,29 @@ public class CommandHandler {
 		return true;
 	}
 	
+	private Boolean connections(String[] params){
+		webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.ACCEPTED));
+		terminalService.printSystemMessage("Get connection list.");
+		return true;
+	}
+	
+	private Boolean pending(String[] params)
+	{
+		webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.PENDING));
+		terminalService.printSystemMessage("Get pending connection list.");
+		return true;
+	}
 	private Boolean inviteCode(String[] params){
 		webSocketService.sendMessage(new FetchUserInviteCodeRequest());
 		terminalService.printSystemMessage("Request get invite code...");
+		return true;
+	}
+	
+	private Boolean disconnect(String[] params){
+		if(params.length >0){
+			webSocketService.sendMessage(new RejectRequest(params[0]));
+			terminalService.printSystemMessage("Disconnect user");
+		}
 		return true;
 	}
 	
@@ -95,7 +130,15 @@ public class CommandHandler {
 		{
 			webSocketService.sendMessage(new InviteRequest(new InviteCode(params[0])));
 			terminalService.printSystemMessage("Request user Invite");
-			return true;
+		}
+		return true;
+	}
+	
+	private Boolean reject(String[] params) {
+		if(params.length > 0)
+		{
+			webSocketService.sendMessage(new RejectRequest(params[0]));
+			terminalService.printSystemMessage("Reject invite request");
 		}
 		return true;
 	}
@@ -133,6 +176,11 @@ public class CommandHandler {
 						'/logout' Logout a user. ex: /logout
 						'/inviteCode' Get invite code. ex: /inviteCode
 						'/invite' Invite a user to connect. ex: /invite <inviteCode>
+						'/accept' Accept the invite request . ex: /accept <InviterUsername>
+						'/reject' Reject the invite request . ex: /reject <InviterUsername>
+						'/connections' Get connection users. ex: /connections
+						'/pending' Get pending connection inviters. ex: /pending
+						'/disconnect' Disconnect a user. ex: /disconnect <ConnectedUsername>
 						'/clear' Clear terminal. ex: /clear
 						'/exit' Exit the program. ex: /exit
 						"""
