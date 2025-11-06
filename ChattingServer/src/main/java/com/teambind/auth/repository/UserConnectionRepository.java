@@ -2,7 +2,7 @@ package com.teambind.auth.repository;
 
 import com.teambind.auth.dto.projection.InvitorUserIdProjection;
 import com.teambind.auth.dto.projection.UserConnectionStatusProjection;
-import com.teambind.auth.dto.projection.UserIdUsernameProjection;
+import com.teambind.auth.dto.projection.UserIdUsernameInvitorUserIdProjection;
 import com.teambind.auth.entity.UserConnectionEntity;
 import com.teambind.auth.entity.UserConnectionId;
 import com.teambind.constant.UserConnectionStatus;
@@ -30,18 +30,18 @@ public interface UserConnectionRepository extends JpaRepository<UserConnectionEn
 	
 	
 	@Query(
-			"SELECT u.partnerUserBId AS userId, userB.username as username "
+			"SELECT u.partnerUserBId AS userId, userB.username AS username , u.invitorUserId as invitorUserId "
 					+ "FROM UserConnectionEntity u "
 					+ "INNER JOIN UserEntity userB ON u.partnerUserBId = userB.userId "
 					+ "where u.partnerUserAId = :userId AND u.status = :status")
-	List<UserIdUsernameProjection> findUserConnectionPartnerAUserIdUserIdANdStatus(@Param("userId") Long userId, @Param("status") UserConnectionStatus status);
+	List<UserIdUsernameInvitorUserIdProjection> findUserConnectionPartnerAUserIdUserIdANdStatus(@Param("userId") Long userId, @Param("status") UserConnectionStatus status);
 	
 	@Query(
-			"SELECT u.partnerUserAId AS userId, userA.username as username "
+			"SELECT u.partnerUserAId AS userId, userA.username as username , u.invitorUserId as invitorUserId "
 					+ "FROM UserConnectionEntity u "
 					+ "INNER JOIN UserEntity userA ON u.partnerUserAId = userA.userId "
 					+ "where u.partnerUserBId = :userId AND u.status = :status")
-	List<UserIdUsernameProjection> findUserConnectionPartnerBUserIdUserIdANdStatus(@Param("userId") Long userId, @Param("status") UserConnectionStatus status);
+	List<UserIdUsernameInvitorUserIdProjection> findUserConnectionPartnerBUserIdUserIdANdStatus(@Param("userId") Long userId, @Param("status") UserConnectionStatus status);
 	
 	
 }

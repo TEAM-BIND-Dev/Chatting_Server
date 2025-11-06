@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.function.Function;
 
 @Service
+@Transactional
 public class UserConnectionLimitService {
 	private final UserRepository userRepository;
 	private final UserConnectionRepository userConnectionRepository;

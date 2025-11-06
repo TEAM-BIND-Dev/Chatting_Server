@@ -15,7 +15,8 @@ import com.teambind.messagesystem.constant.MessageType;
 		@JsonSubTypes.Type(value = AcceptResponse.class, name = MessageType.ACCEPT_RESPONSE),
 		@JsonSubTypes.Type(value = RejectResponse.class, name = MessageType.REJECT_RESPONSE),
 		@JsonSubTypes.Type(value = DisconnectResponse.class, name = MessageType.DISCONNECT_RESPONSE),
-		
+		@JsonSubTypes.Type(value = FetchUserInviteCodeResponse.class, name = MessageType.FETCH_USER_INVITE_CODE_RESPONSE),
+		@JsonSubTypes.Type(value = FetchConnectionsResponse.class, name = MessageType.FETCH_CONNECTIONS_RESPONSE),
 		
 		@JsonSubTypes.Type(value = AcceptNotification.class, name = MessageType.NOTIFY_ACCEPT),
 		@JsonSubTypes.Type(value = MessageNotification.class, name = MessageType.NOTIFY_MESSAGE),

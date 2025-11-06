@@ -2,7 +2,7 @@ package com.teambind.chattingserver.service;
 
 import com.teambind.auth.dto.InviteCode;
 import com.teambind.auth.dto.User;
-import com.teambind.auth.dto.projection.UserIdUsernameProjection;
+import com.teambind.auth.dto.projection.UserIdUsernameInvitorUserIdProjection;
 import com.teambind.auth.entity.UserConnectionEntity;
 import com.teambind.auth.entity.UserId;
 import com.teambind.auth.repository.UserConnectionRepository;
@@ -19,6 +19,7 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 @Service
+@Transactional
 public class UserConnectionService {
 	private final UserService userService;
 	private final UserConnectionLimitService userConnectionLimitService;
@@ -33,13 +34,25 @@ public class UserConnectionService {
 	
 	
 	public List<User> getUsersByStatus(UserId userId, UserConnectionStatus status) {
-		List<UserIdUsernameProjection> userA = userConnectionRepository.findUserConnectionPartnerAUserIdUserIdANdStatus(userId.id(), status);
-		List<UserIdUsernameProjection> userB = userConnectionRepository.findUserConnectionPartnerBUserIdUserIdANdStatus(userId.id(), status);
-		return Stream.concat(userA.stream(), userB.stream()).map(
-				item -> new User(new UserId(item.getUserId()), item.getUsername())
-		).toList();
+		List<UserIdUsernameInvitorUserIdProjection> userA = userConnectionRepository.findUserConnectionPartnerAUserIdUserIdANdStatus(userId.id(), status);
+		List<UserIdUsernameInvitorUserIdProjection> userB = userConnectionRepository.findUserConnectionPartnerBUserIdUserIdANdStatus(userId.id(), status);
+		
+		if(status == UserConnectionStatus.ACCEPTED)
+		{
+			return Stream.concat(userA.stream(), userB.stream()).map(
+					item -> new User(new UserId(item.getUserId()), item.getUsername())
+			).toList();
+		}
+		
+		else{
+			return Stream.concat(userA.stream(), userB.stream())
+					.filter(item -> !item.getInvitorUserId().equals(userId.id()))
+					.map(item -> new User(new UserId(item.getInvitorUserId()), item.getUsername()))
+					.toList();
+		}
 	}
 	
+	@Transactional
 	public Pair<Boolean, String> reject(UserId senderUserId, String inviterUsername) {
 		return userService.getUserId(inviterUsername)
 				.filter(userId -> !userId.equals(senderUserId))
@@ -59,6 +72,7 @@ public class UserConnectionService {
 	}
 	
 	
+	@Transactional
 	public Pair<Optional<UserId>, String> invite(UserId invitoerUserId, InviteCode inviteCode) {
 		Optional<User> partner = userService.getUser(inviteCode);
 		if (partner.isEmpty()) {
@@ -105,42 +119,43 @@ public class UserConnectionService {
 		};
 	}
 	
+	@Transactional
 	public Pair<Optional<UserId>, String> accept(UserId accepterUserId, String invitorUsername) {
 		Optional<UserId> userId = userService.getUserId(invitorUsername);
 		if (userId.isEmpty()) {
 			log.info("invitor username is empty. {}", invitorUsername);
 			return Pair.of(Optional.empty(), "invalid username");
 		}
-		
+
 		UserId inviterUserId = userId.get();
-		
+
 		if (accepterUserId.equals(inviterUserId)) {
 			log.info("cannot accept self. {}", accepterUserId);
 			return Pair.of(Optional.empty(), "cannot accept self");
 		}
-		
+
 		if (getInvitorUserId(accepterUserId, inviterUserId)
 				.filter(invitationSenderUserId -> invitationSenderUserId.equals(inviterUserId))
 				.isEmpty()) {
 			return Pair.of(Optional.empty(), "invalid username");
 		}
-		
+
 		UserConnectionStatus userConnectionStatus = getStatus(inviterUserId, accepterUserId);
 		if (userConnectionStatus.equals(UserConnectionStatus.ACCEPTED)) {
 			log.info("{} already accepted to {}", accepterUserId, inviterUserId);
 			return Pair.of(Optional.empty(), "already accepted to " + invitorUsername);
 		}
-		
+
 		if (!userConnectionStatus.equals(UserConnectionStatus.PENDING)) {
 			return Pair.of(Optional.empty(), "Accept fail");
 		}
-		
+
 		Optional<String> acceptorUsername = userService.getUsername(accepterUserId);
 		if (acceptorUsername.isEmpty()) {
 			log.info("acceptor username is empty. {}", accepterUserId);
 			return Pair.of(Optional.empty(), "Accept fail");
 		}
-		
+
 		try {
 			userConnectionLimitService.accept(accepterUserId, inviterUserId);
 			return Pair.of(Optional.of(inviterUserId), acceptorUsername.get());
@@ -150,10 +165,11 @@ public class UserConnectionService {
 		} catch (IllegalStateException ex) {
 			return Pair.of(Optional.empty(), ex.getMessage());
 		}
-		
-		
+
+
 	}
 	
+	@Transactional
 	public Pair<Boolean, String> disconnect(UserId senderUserId, String partnerUserName) {
 		return userService.getUserId(partnerUserName)
 				.filter(partnerUserId -> !senderUserId.equals(partnerUserId))
@@ -174,7 +190,7 @@ public class UserConnectionService {
 						log.error("Disconnect fail. cause : {}", ex.getMessage());
 					}
 					return Pair.of(false, "Disconnect fail.");
-					
+
 				})).orElse(Pair.of(false, "Disconnect fail."));
 	}
 	

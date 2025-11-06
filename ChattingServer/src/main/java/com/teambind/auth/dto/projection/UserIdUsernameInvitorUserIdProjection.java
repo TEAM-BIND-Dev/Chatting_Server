@@ -1,7 +1,9 @@
 package com.teambind.auth.dto.projection;
 
-public interface UserIdUsernameProjection {
+public interface UserIdUsernameInvitorUserIdProjection {
 	Long getUserId();
 	
 	String getUsername();
+	
+	Long getInvitorUserId();
 }

@@ -119,14 +119,14 @@ public class CommandHandler {
 	
 	private Boolean disconnect(String[] params){
 		if(params.length >0){
-			webSocketService.sendMessage(new RejectRequest(params[0]));
+			webSocketService.sendMessage(new DisconnectRequest(params[0]));
 			terminalService.printSystemMessage("Disconnect user");
 		}
 		return true;
 	}
 	
 	private Boolean invite(String[] params) {
-		if(params.length > 1)
+		if(params.length > 0)
 		{
 			webSocketService.sendMessage(new InviteRequest(new InviteCode(params[0])));
 			terminalService.printSystemMessage("Request user Invite");

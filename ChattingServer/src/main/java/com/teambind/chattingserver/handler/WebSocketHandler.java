@@ -59,8 +59,8 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		//TODO : overflowStrategy And Param
 		ConcurrentWebSocketSessionDecorator concurrentWebSocketSessionDecorator =
 				new ConcurrentWebSocketSessionDecorator(session, 5000, 100 * 1024);
-		
-		UserId userId = (UserId) session.getAttributes().put(Constants.USER_ID.getValue(), session.getId());
+
+		UserId userId = (UserId) session.getAttributes().get(Constants.USER_ID.getValue());
 		sessionManager.putSession(userId, concurrentWebSocketSessionDecorator);
 	}
 	
