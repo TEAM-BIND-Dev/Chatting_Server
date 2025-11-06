@@ -1,4 +1,4 @@
-package com.teambind.auth.entity;
+package com.teambind.auth.dto;
 
 public record UserId(
 		Long id

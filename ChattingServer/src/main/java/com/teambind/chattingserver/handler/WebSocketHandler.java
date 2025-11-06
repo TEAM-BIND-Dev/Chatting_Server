@@ -1,6 +1,6 @@
 package com.teambind.chattingserver.handler;
 
-import com.teambind.auth.entity.UserId;
+import com.teambind.auth.dto.UserId;
 import com.teambind.chattingserver.dto.websocket.inbound.BaseRequest;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.Constants;

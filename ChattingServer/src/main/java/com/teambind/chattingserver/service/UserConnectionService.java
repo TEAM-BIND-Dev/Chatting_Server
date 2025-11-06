@@ -4,10 +4,9 @@ import com.teambind.auth.dto.InviteCode;
 import com.teambind.auth.dto.User;
 import com.teambind.auth.dto.projection.UserIdUsernameInvitorUserIdProjection;
 import com.teambind.auth.entity.UserConnectionEntity;
-import com.teambind.auth.entity.UserId;
+import com.teambind.auth.dto.UserId;
 import com.teambind.auth.repository.UserConnectionRepository;
 import com.teambind.constant.UserConnectionStatus;
-import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
@@ -126,47 +125,46 @@ public class UserConnectionService {
 			log.info("invitor username is empty. {}", invitorUsername);
 			return Pair.of(Optional.empty(), "invalid username");
 		}
-
+		
 		UserId inviterUserId = userId.get();
-
+		
 		if (accepterUserId.equals(inviterUserId)) {
 			log.info("cannot accept self. {}", accepterUserId);
 			return Pair.of(Optional.empty(), "cannot accept self");
 		}
-
+		
 		if (getInvitorUserId(accepterUserId, inviterUserId)
 				.filter(invitationSenderUserId -> invitationSenderUserId.equals(inviterUserId))
 				.isEmpty()) {
 			return Pair.of(Optional.empty(), "invalid username");
 		}
-
+		
 		UserConnectionStatus userConnectionStatus = getStatus(inviterUserId, accepterUserId);
 		if (userConnectionStatus.equals(UserConnectionStatus.ACCEPTED)) {
 			log.info("{} already accepted to {}", accepterUserId, inviterUserId);
 			return Pair.of(Optional.empty(), "already accepted to " + invitorUsername);
 		}
-
+		
 		if (!userConnectionStatus.equals(UserConnectionStatus.PENDING)) {
 			return Pair.of(Optional.empty(), "Accept fail");
 		}
-
+		
 		Optional<String> acceptorUsername = userService.getUsername(accepterUserId);
 		if (acceptorUsername.isEmpty()) {
 			log.info("acceptor username is empty. {}", accepterUserId);
 			return Pair.of(Optional.empty(), "Accept fail");
 		}
-
+		
 		try {
 			userConnectionLimitService.accept(accepterUserId, inviterUserId);
 			return Pair.of(Optional.of(inviterUserId), acceptorUsername.get());
-		} catch (EntityNotFoundException ex) {
-			log.error("accept error : {}", ex.getMessage());
-			return Pair.of(Optional.empty(), "accept error");
 		} catch (IllegalStateException ex) {
 			return Pair.of(Optional.empty(), ex.getMessage());
+		} catch (Exception ex) {
+			log.error("accept error : {}", ex.getMessage());
+			return Pair.of(Optional.empty(), "accept error");
+			
 		}
-
-
 	}
 	
 	@Transactional

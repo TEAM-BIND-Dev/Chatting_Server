@@ -1,6 +1,6 @@
 package com.teambind.chattingserver.session;
 
-import com.teambind.auth.entity.UserId;
+import com.teambind.auth.dto.UserId;
 import com.teambind.chattingserver.dto.websocket.outbound.BaseMessage;
 import com.teambind.util.JsonUtil;
 import org.slf4j.Logger;

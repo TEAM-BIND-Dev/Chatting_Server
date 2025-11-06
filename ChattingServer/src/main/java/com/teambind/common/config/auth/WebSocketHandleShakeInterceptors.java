@@ -1,7 +1,7 @@
 package com.teambind.common.config.auth;
 
 import com.teambind.auth.auth.MessageUserDetails;
-import com.teambind.auth.entity.UserId;
+import com.teambind.auth.dto.UserId;
 import com.teambind.constant.Constants;
 import jakarta.servlet.http.HttpSession;
 import org.slf4j.Logger;

@@ -6,7 +6,7 @@ import com.teambind.auth.dto.User;
 import com.teambind.auth.dto.projection.CountProjection;
 import com.teambind.auth.dto.projection.UsernameProjection;
 import com.teambind.auth.entity.UserEntity;
-import com.teambind.auth.entity.UserId;
+import com.teambind.auth.dto.UserId;
 import com.teambind.auth.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,23 +1,27 @@
 package com.teambind.chattingserver.dto.websocket.outbound;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teambind.constant.MessageType;
 
 
 public class MessageNotification extends BaseMessage {
-	
+
+	@JsonProperty("username")
 	private final String username;
+
+	@JsonProperty("content")
 	private final String content;
-	
+
 	public MessageNotification(String username, String content) {
 		super(MessageType.NOTIFY_MESSAGE);
 		this.username = username;
 		this.content = content;
 	}
-	
+
 	public String getContent() {
 		return content;
 	}
-	
+
 	public String getUsername() {
 		return username;
 	}

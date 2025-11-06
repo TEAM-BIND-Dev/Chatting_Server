@@ -1,7 +1,7 @@
 package com.teambind.integration
 
 import com.teambind.ChattingServerApplication
-import com.teambind.auth.entity.UserId
+import com.teambind.auth.dto.UserId
 import com.teambind.auth.repository.UserConnectionRepository
 import com.teambind.auth.repository.UserRepository
 import com.teambind.chattingserver.service.UserConnectionLimitService

@@ -38,3 +38,30 @@ CREATE TABLE `user_connection`
   DEFAULT CHARSET = utf8mb4
   COLLATE = utf8mb4_uca1400_ai_ci;
 
+CREATE TABLE `channel`
+(
+    `channel_id`        bigint(20)   NOT NULL AUTO_INCREMENT,
+    `title` varchar(30) not null ,
+    `channel_invite_code`varchar(32) NOT NULL,
+    `head_count` int(11) NOT NULL,
+    `created_at`       datetime(6)  NOT NULL,
+    `updated_at`       datetime(6)  NOT NULL,
+    PRIMARY KEY (`channel_id`),
+    constraint channel_invite_code unique (channel_invite_code)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_uca1400_ai_ci;
+
+CREATE TABLE `user_channel`
+(
+    `user_id`  bigint(20)   NOT NULL AUTO_INCREMENT,
+    `channel_id`        bigint(20)   NOT NULL AUTO_INCREMENT,
+    `last_read_msg_seq` bigint   NOT NULL,
+    `created_at`       datetime(6)  NOT NULL,
+    `updated_at`       datetime(6)  NOT NULL,
+    PRIMARY KEY (`user_id`,`channel_id`),
+    index `channel_id` (`channel_id`)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_uca1400_ai_ci;
+

@@ -1,7 +1,5 @@
 package com.teambind.auth.dto;
 
-import com.teambind.auth.entity.UserId;
-
 import java.util.Objects;
 
 
