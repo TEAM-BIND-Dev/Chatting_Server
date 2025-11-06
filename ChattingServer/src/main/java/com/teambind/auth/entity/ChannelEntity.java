@@ -38,6 +38,12 @@ public class ChannelEntity extends BaseEntity {
 	}
 	
 	
+	protected ChannelEntity(Long headCount , String title) {
+		this.headCount = headCount;
+		this.title = title;
+		// JPA requires a no-arg constructor
+	}
+	
 	public Long getChannelId() {
 		return channelId;
 	}

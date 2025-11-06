@@ -1,6 +1,6 @@
 package com.teambind.constant;
 
-public enum Result {
+public enum ResultType {
 	SUCCESS("Success."),
 	FAIL("Fail."),
 	INVALID_ARGS("Invalid args"),
@@ -13,7 +13,7 @@ public enum Result {
 	
 	private final  String message;
 	
-	Result(String message) {
+	ResultType(String message) {
 		this.message = message;
 	}
 	

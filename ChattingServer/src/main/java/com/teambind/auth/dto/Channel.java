@@ -5,7 +5,7 @@ import java.util.Objects;
 public record Channel(
 		ChannelId channelId,
 		String title,
-		int headCount
+		Long headCount
 ) {
 	@Override
 	public boolean equals(Object o) {

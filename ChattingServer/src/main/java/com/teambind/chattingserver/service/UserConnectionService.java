@@ -198,7 +198,7 @@ public class UserConnectionService {
 				Long.max(partnerAuserId.id(), partnerBuserId.id())).map(invitorUserIdProjection -> new UserId(invitorUserIdProjection.getInvitorUserId()));
 	}
 	
-	private UserConnectionStatus getStatus(UserId invitorUserId, UserId partnerUserId) {
+	public UserConnectionStatus getStatus(UserId invitorUserId, UserId partnerUserId) {
 		return userConnectionRepository.findByPartnerUserAIdAndPartnerUserBId(
 				Long.min(invitorUserId.id(), partnerUserId.id()),
 				Long.max(invitorUserId.id(), partnerUserId.id())).map(status -> UserConnectionStatus.valueOf(status.getStatus())).orElse(
