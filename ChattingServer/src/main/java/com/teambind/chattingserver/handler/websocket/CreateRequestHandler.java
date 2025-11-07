@@ -1,14 +1,12 @@
 package com.teambind.chattingserver.handler.websocket;
 
 import com.teambind.auth.dto.Channel;
-import com.teambind.auth.dto.Connection;
 import com.teambind.auth.dto.UserId;
 import com.teambind.chattingserver.dto.websocket.inbound.CreateRqeust;
-import com.teambind.chattingserver.dto.websocket.inbound.FetchConnectionsRequest;
+import com.teambind.chattingserver.dto.websocket.outbound.CreateResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
-import com.teambind.chattingserver.dto.websocket.outbound.FetchConnectionsResponse;
+import com.teambind.chattingserver.dto.websocket.outbound.JoinNotification;
 import com.teambind.chattingserver.service.ChannelService;
-import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.service.UserService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.IdKey;
@@ -18,7 +16,6 @@ import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
 
-import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -40,12 +37,36 @@ public class CreateRequestHandler implements BaseRequestHandler<CreateRqeust> {
 		UserId senderUserId = (UserId) senderSession.getAttributes().get(IdKey.USER_ID.getValue());
 		
 		Optional<UserId> userId = userService.getUserId(request.getParticipateUsername());
-		if(userId.isEmpty()){
+		if (userId.isEmpty()) {
 			sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.CREATE_REQUEST, ResultType.NOT_FOUND.getMessage()));
 			return;
 		}
+		
+		
 		UserId participateUserId = userId.get();
-		Pair<Optional<Channel>, ResultType> creat = channelService.creat(senderUserId, participateUserId, request.getTitle());
+		Pair<Optional<Channel>, ResultType> result;
+		
+		try {
+			result = channelService.creat(senderUserId, participateUserId, request.getTitle());
+		} catch (Exception ex) {
+			sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.CREATE_REQUEST, ResultType.FAIL.getMessage()));
+			return;
+		}
+		
+		
+		result.getFirst().ifPresentOrElse(
+				channel -> {
+					sessionManager.sendMessage(
+							senderSession,
+							new CreateResponse(channel.channelId(), channel.title()));
+					sessionManager.sendMessage(
+							sessionManager.getSession(participateUserId),
+							new JoinNotification(channel.channelId(), channel.title()));
+				},
+				() -> sessionManager.sendMessage(
+						senderSession,
+						new ErrorResponse(MessageType.CREATE_REQUEST, ResultType.FAIL.getMessage())));
+		
 		
 	}
 }

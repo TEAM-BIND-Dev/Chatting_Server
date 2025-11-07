@@ -1,15 +1,11 @@
 package com.teambind.auth.entity;
 
 import com.teambind.common.config.baseEntity.BaseEntity;
-import com.teambind.constant.UserConnectionStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-
-import java.util.Objects;
 
 @Entity
 @Table(name = "user_connection")
-@IdClass(ChannelId.class)
+@IdClass(UserChannelId.class)
 
 public class UserChannelEntity extends BaseEntity {
 	public UserChannelEntity() {

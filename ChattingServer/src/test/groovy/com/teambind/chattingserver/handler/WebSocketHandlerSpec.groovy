@@ -2,7 +2,7 @@ package com.teambind.chattingserver.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.teambind.ChattingServerApplication
-import com.teambind.chattingserver.dto.websocket.inbound.WriteMessageRequest
+import com.teambind.chattingserver.dto.websocket.inbound.WriteMessage
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -44,9 +44,9 @@ class WebSocketHandlerSpec extends Specification {
 
 
         when:
-        clientA.session.sendMessage(new TextMessage(objectMapper.writeValueAsString(new WriteMessageRequest("clientA", "안녕하세요 A 입니다."))))
-        clientB.session.sendMessage(new TextMessage(objectMapper.writeValueAsString(new WriteMessageRequest("clientB", "안녕하세요 B 입니다."))))
-        clientC.session.sendMessage(new TextMessage(objectMapper.writeValueAsString(new WriteMessageRequest("clientC", "안녕하세요 C 입니다."))))
+        clientA.session.sendMessage(new TextMessage(objectMapper.writeValueAsString(new WriteMessage("clientA", "안녕하세요 A 입니다."))))
+        clientB.session.sendMessage(new TextMessage(objectMapper.writeValueAsString(new WriteMessage("clientB", "안녕하세요 B 입니다."))))
+        clientC.session.sendMessage(new TextMessage(objectMapper.writeValueAsString(new WriteMessage("clientC", "안녕하세요 C 입니다."))))
         then:
 
         def resultA = clientA.queue.poll(3, TimeUnit.SECONDS) + clientA.queue.poll(3, TimeUnit.SECONDS)

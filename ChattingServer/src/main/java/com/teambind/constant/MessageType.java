@@ -14,6 +14,11 @@ public class MessageType {
 	public static final String DISCONNECT_REQUEST = "DISCONNECT_REQUEST";
 	public static final String DISCONNECT_RESPONSE = "DISCONNECT_RESPONSE";
 	
+	public static final String ENTER_REQUEST = "DISCONNECT_REQUEST";
+	public static final String ENTER_RESPONSE = "DISCONNECT_RESPONSE";
+	
+	
+	
 	public static final String CREATE_REQUEST = "CREATE_REQUEST";
 	public static final String CREATE_RESPONSE = "CREATE_RESPONSE";
 	public static final String WRITE_MESSAGE = "WRITE_MESSAGE";

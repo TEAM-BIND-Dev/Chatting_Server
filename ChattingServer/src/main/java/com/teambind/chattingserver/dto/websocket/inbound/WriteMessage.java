@@ -5,12 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.teambind.constant.MessageType;
 
 
-public class WriteMessageRequest extends BaseRequest {
+public class WriteMessage extends BaseRequest {
 	private final String username;
 	private final String content;
 	
 	@JsonCreator
-	public WriteMessageRequest(
+	public WriteMessage(
 			@JsonProperty("username") String username,
 			@JsonProperty("content") String content) {
 		super(MessageType.WRITE_MESSAGE);

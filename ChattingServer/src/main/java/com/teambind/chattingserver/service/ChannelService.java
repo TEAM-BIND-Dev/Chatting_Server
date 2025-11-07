@@ -3,6 +3,7 @@ package com.teambind.chattingserver.service;
 import com.teambind.auth.dto.Channel;
 import com.teambind.auth.dto.ChannelId;
 import com.teambind.auth.dto.UserId;
+import com.teambind.auth.dto.projection.ChannelTitleProjection;
 import com.teambind.auth.entity.ChannelEntity;
 import com.teambind.auth.entity.UserChannelEntity;
 import com.teambind.auth.repository.ChannelRepository;
@@ -21,14 +22,15 @@ import java.util.Optional;
 @Slf4j
 public class ChannelService {
 	
-	private final UserConnectionService userConnectionService;
 	private final ChannelRepository channelRepository;
 	private final UserChannelRepository userChannelRepository;
+	private final SessionService sessionService;
 	
-	public ChannelService(UserConnectionService userConnectionService, ChannelRepository channelRepository, UserChannelRepository userChannelRepository) {
-		this.userConnectionService = userConnectionService;
+	public ChannelService(ChannelRepository channelRepository, UserChannelRepository userChannelRepository, SessionService sessionService) {
+
 		this.channelRepository = channelRepository;
 		this.userChannelRepository = userChannelRepository;
+		this.sessionService = sessionService;
 	}
 	
 	
@@ -58,7 +60,32 @@ public class ChannelService {
 			log.error("create creat faild. cause : {}", e.getMessage());
 			return Pair.of(Optional.empty(), ResultType.FAIL);
 		}
+	}
+	
+	public boolean isJoined(ChannelId channelId, UserId userId) {
+		return userChannelRepository.existsByUserIdAndChannelId(userId.id(), channelId.channelId());
 		
+	}
+	
+	public Pair<Optional<String>, ResultType> enter(ChannelId channelId, UserId userId) {
+		if (!isJoined(channelId, userId)) {
+			return Pair.of(Optional.empty(), ResultType.INVALID_ARGS);
+		}
+		
+		Optional<String> title = channelRepository.finalChannelTitleByChannelId(channelId.channelId()).map(ChannelTitleProjection::getTitle);
+		;
+		
+		if (title.isEmpty()) {
+			log.warn("Enter Channel failed. Channel does not exist. ChannelId : {} , UserId : {}", channelId.channelId(), userId.id());
+			return Pair.of(Optional.empty(), ResultType.NOT_FOUND);
+		}
+		
+		if (sessionService.setActiveChannel(userId, channelId)) {
+			return Pair.of(title, ResultType.SUCCESS);
+		}
+		
+		log.warn("Enter Channel failed. Channel does not exist. ChannelId : {} , UserId : {}", channelId.channelId(), userId.id());
+		return Pair.of(Optional.empty(), ResultType.FAIL);
 	}
 	
 	

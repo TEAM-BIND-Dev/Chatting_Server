@@ -1,6 +1,7 @@
 package com.teambind.chattingserver.dto.websocket.outbound;
 
-import com.teambind.auth.entity.ChannelId;
+
+import com.teambind.auth.dto.ChannelId;
 import com.teambind.constant.MessageType;
 
 public class JoinNotification extends BaseMessage{

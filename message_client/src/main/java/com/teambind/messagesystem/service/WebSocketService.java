@@ -1,7 +1,7 @@
 package com.teambind.messagesystem.service;
 
 import com.teambind.messagesystem.dto.websocket.outbound.BaseRequest;
-import com.teambind.messagesystem.dto.websocket.outbound.KeepAliveRequest;
+import com.teambind.messagesystem.dto.websocket.outbound.KeepAlive;
 import com.teambind.messagesystem.dto.websocket.outbound.WriteMessageRequest;
 import com.teambind.messagesystem.handler.WebSocketMessageHandler;
 import com.teambind.messagesystem.handler.WebSocketSender;
@@ -106,7 +106,7 @@ public class WebSocketService {
 			scheduledExecutorService = Executors.newSingleThreadScheduledExecutor();
 		}
 		scheduledExecutorService.scheduleAtFixedRate(()
-				-> sendMessage(new KeepAliveRequest()), 1, 1, TimeUnit.MINUTES);
+				-> sendMessage(new KeepAlive()), 1, 1, TimeUnit.MINUTES);
 	}
 	
 	private void disableKeepAlive() {

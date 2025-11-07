@@ -26,7 +26,7 @@ class RequestTypeMappingSpec extends Specification {
         payload                                                                    | expectedClass       | validate
         '{"type": "INVITE_REQUEST", "userInviteCode":"TestInviteCode123"}'         | InviteRequest       | { req -> (req as InviteRequest).userInviteCode.code() == 'TestInviteCode123' }
         '{"type": "ACCEPT_REQUEST", "username":"testuser"}'                        | AcceptRequest       | { req -> (req as AcceptRequest).username == 'testuser' }
-        '{"type": "WRITE_MESSAGE", "username":"testuser","content":"testMessage"}' | WriteMessageRequest | { req -> (req as WriteMessageRequest).getContent() == "testMessage" }
+        '{"type": "WRITE_MESSAGE", "username":"testuser","content":"testMessage"}' | WriteMessage | { req -> (req as WriteMessage).getContent() == "testMessage" }
         '{"type": "KEEP_ALIVE"}'                                                   | KeepAliveRequest    | { req -> (req as KeepAliveRequest).getType() == 'KEEP_ALIVE' }
 
     }
