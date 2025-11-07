@@ -3,7 +3,7 @@ package com.teambind.chattingserver.handler;
 import com.teambind.auth.dto.UserId;
 import com.teambind.chattingserver.dto.websocket.inbound.BaseRequest;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
-import com.teambind.constant.Constants;
+import com.teambind.constant.IdKey;
 import com.teambind.util.JsonUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,7 +32,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void afterConnectionClosed(WebSocketSession session, @NonNull CloseStatus status) {
 		log.info("Connection Closed: {} from{}", status, session.getId());
-		UserId userId = (UserId) session.getAttributes().get(Constants.USER_ID.getValue());
+		UserId userId = (UserId) session.getAttributes().get(IdKey.USER_ID.getValue());
 		sessionManager.closeSession(userId);
 		log.warn("not exist empty session : {}", session.getId());
 	}
@@ -49,7 +49,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 	@Override
 	public void handleTransportError(WebSocketSession session, Throwable exception) {
 		log.error("TransPortError: {} , from : {}", exception.getMessage(), session.getId());
-		UserId userId = (UserId) session.getAttributes().get(Constants.USER_ID.getValue());
+		UserId userId = (UserId) session.getAttributes().get(IdKey.USER_ID.getValue());
 		sessionManager.closeSession(userId);
 	}
 	
@@ -60,7 +60,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
 		ConcurrentWebSocketSessionDecorator concurrentWebSocketSessionDecorator =
 				new ConcurrentWebSocketSessionDecorator(session, 5000, 100 * 1024);
 
-		UserId userId = (UserId) session.getAttributes().get(Constants.USER_ID.getValue());
+		UserId userId = (UserId) session.getAttributes().get(IdKey.USER_ID.getValue());
 		sessionManager.putSession(userId, concurrentWebSocketSessionDecorator);
 	}
 	

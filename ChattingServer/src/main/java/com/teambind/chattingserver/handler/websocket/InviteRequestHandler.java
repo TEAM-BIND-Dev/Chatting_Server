@@ -7,7 +7,7 @@ import com.teambind.chattingserver.dto.websocket.outbound.InviteNotification;
 import com.teambind.chattingserver.dto.websocket.outbound.InviteResponse;
 import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
-import com.teambind.constant.Constants;
+import com.teambind.constant.IdKey;
 import com.teambind.constant.MessageType;
 import com.teambind.constant.UserConnectionStatus;
 import org.springframework.data.util.Pair;
@@ -29,7 +29,7 @@ public class InviteRequestHandler implements BaseRequestHandler<InviteRequest> {
 	
 	@Override
 	public void handleRequest(WebSocketSession senderSession, InviteRequest request) {
-		UserId inviterUserId = (UserId) senderSession.getAttributes().get(Constants.USER_ID.getValue());
+		UserId inviterUserId = (UserId) senderSession.getAttributes().get(IdKey.USER_ID.getValue());
 		Pair<Optional<UserId>, String> result = userConnectionService.invite(inviterUserId, request.getUserInviteCode());
 		result.getFirst().ifPresentOrElse(partinerUserId -> {
 					String inviterUsername = result.getSecond();

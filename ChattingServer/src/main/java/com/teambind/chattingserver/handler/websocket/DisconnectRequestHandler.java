@@ -6,7 +6,7 @@ import com.teambind.chattingserver.dto.websocket.outbound.DisconnectResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
 import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
-import com.teambind.constant.Constants;
+import com.teambind.constant.IdKey;
 import com.teambind.constant.MessageType;
 import com.teambind.constant.UserConnectionStatus;
 import org.springframework.data.util.Pair;
@@ -26,7 +26,7 @@ public class DisconnectRequestHandler implements BaseRequestHandler<DisconnectRe
 	
 	@Override
 	public void handleRequest(WebSocketSession senderSession, DisconnectRequest request) {
-		UserId senderUserId = (UserId) senderSession.getAttributes().get(Constants.USER_ID.getValue());
+		UserId senderUserId = (UserId) senderSession.getAttributes().get(IdKey.USER_ID.getValue());
 		Pair<Boolean, String> result = userConnectionService.disconnect(senderUserId, request.getUsername());
 		if (result.getFirst()) {
 			sessionManager.sendMessage(senderSession, new DisconnectResponse(request.getUsername(), UserConnectionStatus.DISCONNECTED));

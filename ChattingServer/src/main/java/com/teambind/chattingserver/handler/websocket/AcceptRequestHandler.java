@@ -7,7 +7,7 @@ import com.teambind.chattingserver.dto.websocket.outbound.AcceptResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
 import com.teambind.chattingserver.service.UserConnectionService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
-import com.teambind.constant.Constants;
+import com.teambind.constant.IdKey;
 import com.teambind.constant.MessageType;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Component;
@@ -28,7 +28,7 @@ public class AcceptRequestHandler implements BaseRequestHandler<AcceptRequest> {
 	
 	@Override
 	public void handleRequest(WebSocketSession senderSession, AcceptRequest request) {
-		UserId acceptorUserId = (UserId) senderSession.getAttributes().get(Constants.USER_ID.getValue());
+		UserId acceptorUserId = (UserId) senderSession.getAttributes().get(IdKey.USER_ID.getValue());
 		Pair<Optional<UserId>, String> result = userConnectionService.accept(acceptorUserId, request.getUsername());
 		
 		result.getFirst().ifPresentOrElse(

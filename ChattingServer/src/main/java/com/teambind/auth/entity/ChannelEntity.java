@@ -13,10 +13,6 @@ import java.util.UUID;
 @ToString
 public class ChannelEntity extends BaseEntity {
 	
-	public ChannelEntity(Long headCount, String title) {
-		this.headCount = headCount;
-		this.title = title;
-	}
 	
 	@Column(name = "channel_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -6,7 +6,7 @@ import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.FetchUserInviteCodeResponse;
 import com.teambind.chattingserver.service.UserService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
-import com.teambind.constant.Constants;
+import com.teambind.constant.IdKey;
 import com.teambind.constant.MessageType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketSession;
@@ -24,7 +24,7 @@ public class FetchUserInviteCodeHandler implements BaseRequestHandler<FetchUserI
 	
 	@Override
 	public void handleRequest(WebSocketSession senderSession, FetchUserInvitecodeRequest request) {
-		UserId senderUserId = (UserId) senderSession.getAttributes().get(Constants.USER_ID.getValue());
+		UserId senderUserId = (UserId) senderSession.getAttributes().get(IdKey.USER_ID.getValue());
 		userService.getInviteCode(senderUserId).ifPresentOrElse(
 				inviteCode ->
 						sessionManager.sendMessage(
