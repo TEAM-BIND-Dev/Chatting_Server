@@ -9,6 +9,7 @@ import com.teambind.auth.entity.UserChannelEntity;
 import com.teambind.auth.repository.ChannelRepository;
 import com.teambind.auth.repository.UserChannelRepository;
 import com.teambind.constant.ResultType;
+import com.teambind.constant.UserConnectionStatus;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +27,14 @@ public class ChannelService {
 	private final ChannelRepository channelRepository;
 	private final UserChannelRepository userChannelRepository;
 	private final SessionService sessionService;
+	private final UserConnectionService userConnectionService;
 	
-	public ChannelService(ChannelRepository channelRepository, UserChannelRepository userChannelRepository, SessionService sessionService) {
+	public ChannelService(ChannelRepository channelRepository, UserChannelRepository userChannelRepository, SessionService sessionService, UserConnectionService userConnectionService) {
 
 		this.channelRepository = channelRepository;
 		this.userChannelRepository = userChannelRepository;
 		this.sessionService = sessionService;
+		this.userConnectionService = userConnectionService;
 	}
 	
 	
@@ -56,6 +59,13 @@ public class ChannelService {
 			log.warn("Invalid args : title is empty.");
 			return Pair.of(Optional.empty(), ResultType.INVALID_ARGS);
 		}
+		
+		if(userConnectionService.getStatus(senderUserId, participantId) != UserConnectionStatus.ACCEPTED)
+		{
+			log.warn("Invalid args : senderUserId is not accepted.");
+			return Pair.of(Optional.empty(), ResultType.INVALID_ARGS);
+		}
+		
 		
 		try{
 			final Long HEAD_COUNT =2L;

@@ -37,6 +37,7 @@ public class ChannelEntity extends BaseEntity {
 	public ChannelEntity(Long headCount, String title) {
 		this.headCount = headCount;
 		this.title = title;
+		this.channelInviteCode = UUID.randomUUID().toString().replace("-", "");
 		// JPA requires a no-arg constructor
 	}
 	

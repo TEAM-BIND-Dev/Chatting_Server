@@ -1,10 +1,6 @@
 package com.teambind.messagesystem.handler;
 
-import com.teambind.messagesystem.dto.websocket.inbound.BaseMessage;
-import com.teambind.messagesystem.dto.websocket.inbound.MessageNotification;
-import com.teambind.messagesystem.dto.websocket.outbound.WriteMessageRequest;
 import com.teambind.messagesystem.service.TerminalService;
-import com.teambind.messagesystem.util.JsonUtil;
 import jakarta.websocket.MessageHandler;
 
 public class WebSocketMessageHandler implements MessageHandler.Whole<String> {
