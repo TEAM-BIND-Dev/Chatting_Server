@@ -7,7 +7,7 @@ import com.teambind.auth.dto.ChannelId;
 import com.teambind.chattingserver.dto.websocket.outbound.BaseMessage;
 import com.teambind.constant.MessageType;
 
-public class EnterRequest extends BaseMessage {
+public class EnterRequest extends BaseRequest {
 
 	private final ChannelId channelId;
 	
