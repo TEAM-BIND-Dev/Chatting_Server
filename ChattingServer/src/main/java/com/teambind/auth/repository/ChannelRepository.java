@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface ChannelRepository extends JpaRepository< ChannelEntity,Long> {
 	
-	Optional<ChannelTitleProjection> finalChannelTitleByChannelId(@NonNull Long channelId);
+	Optional<ChannelTitleProjection> findChannelTitleByChannelId(@NonNull Long channelId);
 
 }

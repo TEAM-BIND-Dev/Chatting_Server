@@ -10,6 +10,8 @@ import com.teambind.auth.repository.ChannelRepository;
 import com.teambind.auth.repository.UserChannelRepository;
 import com.teambind.constant.ResultType;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +21,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-@Slf4j
 public class ChannelService {
-	
+	private static final Logger log = LoggerFactory.getLogger(ChannelService.class);
 	private final ChannelRepository channelRepository;
 	private final UserChannelRepository userChannelRepository;
 	private final SessionService sessionService;
@@ -33,6 +34,20 @@ public class ChannelService {
 		this.sessionService = sessionService;
 	}
 	
+	
+	public List<UserId> getParticipantIds(ChannelId channelId)
+	{
+		return userChannelRepository.findUserIdByChannelId(channelId.channelId())
+				.stream().map(
+						userId -> new UserId(userId.getUserId())
+				).toList();
+		
+	}
+	
+	
+	public boolean isOnline(ChannelId channelId, UserId userId) {
+		return sessionService.isOnline(userId, channelId);
+	}
 	
 	@Transactional
 	public Pair<Optional<Channel>, ResultType> creat(UserId senderUserId, UserId participantId, String title) {
@@ -72,7 +87,7 @@ public class ChannelService {
 			return Pair.of(Optional.empty(), ResultType.INVALID_ARGS);
 		}
 		
-		Optional<String> title = channelRepository.finalChannelTitleByChannelId(channelId.channelId()).map(ChannelTitleProjection::getTitle);
+		Optional<String> title = channelRepository.findChannelTitleByChannelId(channelId.channelId()).map(ChannelTitleProjection::getTitle);
 		;
 		
 		if (title.isEmpty()) {
