@@ -14,8 +14,8 @@ public class MessageType {
 	public static final String DISCONNECT_REQUEST = "DISCONNECT_REQUEST";
 	public static final String DISCONNECT_RESPONSE = "DISCONNECT_RESPONSE";
 	
-	public static final String ENTER_REQUEST = "DISCONNECT_REQUEST";
-	public static final String ENTER_RESPONSE = "DISCONNECT_RESPONSE";
+	public static final String ENTER_REQUEST = "ENTER_REQUEST";
+	public static final String ENTER_RESPONSE = "ENTER_RESPONSE";
 	
 	
 	
@@ -24,8 +24,7 @@ public class MessageType {
 	public static final String WRITE_MESSAGE = "WRITE_MESSAGE";
 	
 	
-	
-	
+
 	// Notification
 	public static final String KEEP_ALIVE = "KEEP_ALIVE";
 	public static final String NOTIFY_ACCEPT = "NOTIFY_ACCEPT";

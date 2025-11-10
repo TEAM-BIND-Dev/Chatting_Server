@@ -8,6 +8,7 @@ import com.teambind.messagesystem.handler.WebSocketMessageHandler;
 import com.teambind.messagesystem.handler.WebSocketSender;
 import com.teambind.messagesystem.service.RestApiService;
 import com.teambind.messagesystem.service.TerminalService;
+import com.teambind.messagesystem.service.UserService;
 import com.teambind.messagesystem.service.WebSocketService;
 import com.teambind.messagesystem.util.JsonUtil;
 
@@ -30,11 +31,14 @@ public class MessageClient {
 		JsonUtil.setTerminalService(terminalService);
 		RestApiService restApiService = new RestApiService(terminalService, BASE_URL);
 		WebSocketSender webSocketSender = new WebSocketSender(terminalService);
-		WebSocketService webSocketService = new WebSocketService(terminalService, webSocketSender, BASE_URL, WEBSOCKET_PATH);
+		UserService userService = new UserService();
+		WebSocketService webSocketService = new WebSocketService(terminalService, webSocketSender,userService, BASE_URL, WEBSOCKET_PATH);
 		InboundMessageHandler inboundMessageHandler = new InboundMessageHandler(terminalService);
 		webSocketService.setWebSocketMessageHandler(new WebSocketMessageHandler(terminalService, inboundMessageHandler));
-		CommandHandler commandHandler = new CommandHandler(restApiService, webSocketService, terminalService);
+		CommandHandler commandHandler = new CommandHandler(restApiService, userService,webSocketService, terminalService);
 		
+		
+		terminalService.printSystemMessage("'/help' for help");
 		while (true) {
 			
 			String input = terminalService.readLine("Enter message : ");
@@ -47,9 +51,9 @@ public class MessageClient {
 				if (!commandHandler.process(command, arguments)) {
 					break;
 				}
-			} else if (!input.isEmpty()) {
-				terminalService.PrintMessage("me", input);
-				webSocketService.sendMessage(new WriteMessageRequest("test client", input));
+			} else if (!input.isEmpty() && userService.isInChannel()) {
+					terminalService.PrintMessage("me", input);
+					webSocketService.sendMessage(new WriteMessageRequest("test client", input));
 				
 			}
 		}

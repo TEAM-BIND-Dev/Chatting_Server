@@ -16,4 +16,17 @@ public class ErrorResponse extends BaseMessage {
 		this.messageType = messageType;
 		this.message = message;
 	}
+	
+	@Override
+	public String getType() {
+		return super.getType();
+	}
+	
+	public String getMessage() {
+		return message;
+	}
+	
+	public String getMessageType() {
+		return messageType;
+	}
 }

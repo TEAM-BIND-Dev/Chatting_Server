@@ -3,15 +3,19 @@ package com.teambind.messagesystem.handler;
 import com.teambind.messagesystem.dto.websocket.inbound.*;
 import com.teambind.messagesystem.dto.websocket.outbound.AcceptRequest;
 import com.teambind.messagesystem.service.TerminalService;
+import com.teambind.messagesystem.service.UserService;
 import com.teambind.messagesystem.util.JsonUtil;
 
 public class InboundMessageHandler {
 	
 	private final TerminalService terminalService;
+	private final UserService userService;
 	
 	
-	public InboundMessageHandler(TerminalService terminalService) {
+	public InboundMessageHandler(TerminalService terminalService, UserService userService) {
 		this.terminalService = terminalService;
+		this.userService = userService;
+		
 	}
 	
 	public void handle(String payload)
@@ -35,6 +39,16 @@ public class InboundMessageHandler {
 				disconnect(disconnectResponse);
 			} else if (message instanceof FetchConnectionsResponse fetchConnectionsResponse) {
 				fetchConnections(fetchConnectionsResponse);
+			} else if (message instanceof CreateResponse createResponse) {
+				create(createResponse);
+			} else if (message instanceof JoinNotification joinNotification) {
+				joinNotification(joinNotification);
+			} else if (message instanceof EnterResponse enterResponse) {
+				enter(enterResponse);
+			} else if (message instanceof ErrorResponse errorResponse) {
+				error(errorResponse);
+			} else {
+				throw new IllegalStateException("unknown message type : " + message.getClass().getName());
 			}
 		});
 	}
@@ -85,5 +99,28 @@ public class InboundMessageHandler {
 					"%s : %s".formatted(connection.username(), connection.status())
 			);
 		});
+	}
+	private void create(CreateResponse createResponse){
+		terminalService.printSystemMessage(
+				"Created channel %s , %s".formatted(createResponse.getChannelId(), createResponse.getTitle())
+		);
+	}
+	
+	private void joinNotification(JoinNotification joinNotification){
+		terminalService.printSystemMessage(
+				"Joined channel %s , %s".formatted(joinNotification.getChannelId(), joinNotification.getTitle())
+		);
+	}
+	
+	private void enter(EnterResponse enterResponse){
+		userService.moveToChannel(enterResponse.getChannelId());
+		terminalService.printSystemMessage(
+				"Enter channel %s".formatted(enterResponse.getChannelId())
+		);
+	}
+	private void error(ErrorResponse errorResponse){
+		terminalService.printSystemMessage(
+				"Error %s: %s".formatted(errorResponse.getMessageType(), errorResponse.getMessage())
+		);
 	}
 }

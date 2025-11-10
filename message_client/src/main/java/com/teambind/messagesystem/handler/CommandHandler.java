@@ -2,10 +2,12 @@ package com.teambind.messagesystem.handler;
 
 
 import com.teambind.messagesystem.constant.UserConnectionStatus;
+import com.teambind.messagesystem.dto.ChannelId;
 import com.teambind.messagesystem.dto.InviteCode;
 import com.teambind.messagesystem.dto.websocket.outbound.*;
 import com.teambind.messagesystem.service.RestApiService;
 import com.teambind.messagesystem.service.TerminalService;
+import com.teambind.messagesystem.service.UserService;
 import com.teambind.messagesystem.service.WebSocketService;
 
 import java.util.HashMap;
@@ -14,12 +16,14 @@ import java.util.function.Function;
 
 public class CommandHandler {
 	private final RestApiService restApiService;
+	private final UserService userService;
 	private final WebSocketService webSocketService;
 	private final TerminalService terminalService;
 	private final Map<String, Function<String[], Boolean>> commands = new HashMap<>();
 	
-	public CommandHandler(RestApiService restApiService, WebSocketService webSocketService, TerminalService terminalService) {
+	public CommandHandler(RestApiService restApiService, UserService userService, WebSocketService webSocketService, TerminalService terminalService) {
 		this.restApiService = restApiService;
+		this.userService = userService;
 		this.webSocketService = webSocketService;
 		this.terminalService = terminalService;
 		prepareCommands();
@@ -46,6 +50,8 @@ public class CommandHandler {
 		
 		
 		commands.put("clear", this::clear);
+		commands.put("create", this::create);
+		commands.put("enter", this::enter);
 		
 		commands.put("pending", this::pending);
 		commands.put("connections", this::connections);
@@ -56,7 +62,7 @@ public class CommandHandler {
 	}
 	
 	private Boolean register(String[] params) {
-		if (params.length > 1) {
+		if (userService.isInLobby()&& params.length > 1) {
 			if (restApiService.register(params[0], params[1])) {
 				terminalService.printSystemMessage("Registered successfully");
 			} else {
@@ -75,20 +81,22 @@ public class CommandHandler {
 		return true;
 	}
 	private Boolean unregister(String[] params) {
-		webSocketService.closeSession();
-		if (restApiService.unregister()) {
-			terminalService.printSystemMessage("Unregistered successfully");
-		} else {
-			terminalService.printSystemMessage("Failed to unregister");
+		if(userService.isInLobby()) {
+			webSocketService.closeSession();
+			if (restApiService.unregister()) {
+				terminalService.printSystemMessage("Unregistered successfully");
+			} else {
+				terminalService.printSystemMessage("Failed to unregister");
+			}
 		}
-		
 		return true;
 	}
 	
 	private Boolean login(String[] params) {
-		if (params.length > 1) {
+		if (userService.isInLobby() && params.length > 1) {
 			if (restApiService.login(params[0], params[1])) {
 				if (webSocketService.createSession(restApiService.getSessionId())) {
+					userService.login(params[0]);
 					terminalService.printSystemMessage("Logged in successfully");
 				} else {
 					terminalService.printSystemMessage("Failed to login");
@@ -100,25 +108,31 @@ public class CommandHandler {
 	}
 	
 	private Boolean connections(String[] params){
-		webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.ACCEPTED));
-		terminalService.printSystemMessage("Get connection list.");
+		if(userService.isInLobby() ) {
+			webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.ACCEPTED));
+			terminalService.printSystemMessage("Get connection list.");
+		}
 		return true;
 	}
 	
 	private Boolean pending(String[] params)
-	{
+	{if(userService.isInLobby()) {
 		webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.PENDING));
 		terminalService.printSystemMessage("Get pending connection list.");
+	}
 		return true;
 	}
 	private Boolean inviteCode(String[] params){
-		webSocketService.sendMessage(new FetchUserInviteCodeRequest());
-		terminalService.printSystemMessage("Request get invite code...");
+		if(userService.isInLobby() ) {
+			
+			webSocketService.sendMessage(new FetchUserInviteCodeRequest());
+			terminalService.printSystemMessage("Request get invite code...");
+		}
 		return true;
 	}
 	
 	private Boolean disconnect(String[] params){
-		if(params.length >0){
+		if(userService.isInLobby() && params.length >0){
 			webSocketService.sendMessage(new DisconnectRequest(params[0]));
 			terminalService.printSystemMessage("Disconnect user");
 		}
@@ -135,7 +149,7 @@ public class CommandHandler {
 	}
 	
 	private Boolean reject(String[] params) {
-		if(params.length > 0)
+		if(userService.isInLobby() && params.length > 0)
 		{
 			webSocketService.sendMessage(new RejectRequest(params[0]));
 			terminalService.printSystemMessage("Reject invite request");
@@ -147,6 +161,7 @@ public class CommandHandler {
 	private Boolean logout(String[] params) {
 		webSocketService.closeSession();
 		if (restApiService.logout()) {
+			userService.logout();
 			terminalService.printSystemMessage("Logout successfully");
 		} else {
 			terminalService.printSystemMessage("Failed to logout");
@@ -166,21 +181,56 @@ public class CommandHandler {
 		return false;
 	}
 	
+	private Boolean create(String[] params){
+		if(userService.isInLobby() && params.length > 1) {
+			webSocketService.sendMessage(new CreateRequest(params[0], params[1]));
+			terminalService.printSystemMessage("Request create channel");
+			return false;
+		}
+		return true;
+	}
+	
+	private Boolean enter(String[] params){
+		if(userService.isInLobby() && params.length > 0) {
+			try{
+				ChannelId channelId = new ChannelId(Long.valueOf(params[0]));
+				webSocketService.sendMessage(new EnterRequest(channelId));
+				terminalService.printSystemMessage("Enter channel");
+				
+			}catch (Exception e){
+				terminalService.printSystemMessage("Invalid channel id");
+				return true;
+			}
+			return false;
+		}
+		return true;
+	}
+	
 	private Boolean help(String[] params) {
 		terminalService.printSystemMessage(
 				"""
 						Commands:
+						Commands For Lobby
 						'/register' Register a new user. ex: /register <username> <password>
 						'/unregister' Unregister a user. ex: /unregister
 						'/login' Login a user. ex: /login <username> <password>
-						'/logout' Logout a user. ex: /logout
 						'/inviteCode' Get invite code. ex: /inviteCode
+						'/create' Create  channel. ex: /create <Title> <Username>
+						'/enter' Enter the  channel. ex: /enter <ChannelId>
+						
+						Commands For Channel
 						'/invite' Invite a user to connect. ex: /invite <inviteCode>
 						'/accept' Accept the invite request . ex: /accept <InviterUsername>
 						'/reject' Reject the invite request . ex: /reject <InviterUsername>
 						'/connections' Get connection users. ex: /connections
 						'/pending' Get pending connection inviters. ex: /pending
 						'/disconnect' Disconnect a user. ex: /disconnect <ConnectedUsername>
+
+						
+					
+						
+						Commands For Lobby/Channel
+						'/logout' Logout a user. ex: /logout
 						'/clear' Clear terminal. ex: /clear
 						'/exit' Exit the program. ex: /exit
 						"""

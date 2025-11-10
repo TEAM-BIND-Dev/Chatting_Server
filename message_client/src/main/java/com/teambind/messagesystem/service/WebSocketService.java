@@ -23,14 +23,16 @@ public class WebSocketService {
 	
 	private final TerminalService terminalService;
 	private final WebSocketSender webSocketSender;
+	private final UserService userService;
 	private final String webSocketUrl;
 	private WebSocketMessageHandler webSocketMessageHandler;
 	private Session session;
 	private ScheduledExecutorService scheduledExecutorService = null;
 	
-	public WebSocketService(TerminalService terminalService, WebSocketSender webSocketSender, String url, String endpoint) {
+	public WebSocketService(TerminalService terminalService, WebSocketSender webSocketSender, UserService userService, String url, String endpoint) {
 		this.terminalService = terminalService;
 		this.webSocketSender = webSocketSender;
+		this.userService = userService;
 		this.webSocketUrl = "ws://" + url + endpoint;
 	}
 	
@@ -50,7 +52,7 @@ public class WebSocketService {
 		
 		ClientEndpointConfig config = ClientEndpointConfig.Builder.create().configurator(configurator).build();
 		try {
-			session = clientManager.connectToServer(new WebSocketSessionHandler(terminalService, this), config,
+			session = clientManager.connectToServer(new WebSocketSessionHandler(userService,terminalService, this), config,
 					new URI(webSocketUrl));
 			session.addMessageHandler(webSocketMessageHandler);
 			enableKeepAlive();
