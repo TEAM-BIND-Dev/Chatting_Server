@@ -4,7 +4,7 @@ CREATE TABLE `message`
     `message_sequence` bigint(20)   NOT NULL AUTO_INCREMENT,
     `updated_at`       datetime(6)  NOT NULL,
     `content`          varchar(255) NOT NULL,
-    `user_name`        varchar(255) NOT NULL,
+    `user_id`        bigint(20) NOT NULL,
     PRIMARY KEY (`message_sequence`)
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8mb4
@@ -54,8 +54,8 @@ CREATE TABLE `channel`
 
 CREATE TABLE `user_channel`
 (
-    `user_id`  bigint(20)   NOT NULL AUTO_INCREMENT,
-    `channel_id`        bigint(20)   NOT NULL AUTO_INCREMENT,
+    `user_id`  bigint(20)   NOT NULL,
+    `channel_id`        bigint(20)   NOT NULL,
     `last_read_msg_seq` bigint   NOT NULL,
     `created_at`       datetime(6)  NOT NULL,
     `updated_at`       datetime(6)  NOT NULL,

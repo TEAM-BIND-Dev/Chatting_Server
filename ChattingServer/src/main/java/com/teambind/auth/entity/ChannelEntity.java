@@ -8,7 +8,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Entity
-@Table(name = "message_user")
+@Table(name = "channel")
 
 @ToString
 public class ChannelEntity extends BaseEntity {
