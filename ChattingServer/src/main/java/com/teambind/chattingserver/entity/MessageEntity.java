@@ -16,15 +16,15 @@ public class MessageEntity extends BaseEntity {
 	@Id
 	private Long messageSequence;
 	
-	@Column(name = "user_name", nullable = false)
-	private String username;
+	@Column(name = "user_id", nullable = false)
+	private Long userId;
 	
 	@Column(name = "content", nullable = false)
 	private String content;
 	
 	
-	public MessageEntity(String username, String content) {
-		this.username = username;
+	public MessageEntity(Long userId, String content) {
+		this.userId = userId;
 		this.content = content;
 	}
 	
@@ -46,7 +46,7 @@ public class MessageEntity extends BaseEntity {
 	public String toString() {
 		return "MessageEntity{" +
 				"messageSequence=" + messageSequence +
-				", username='" + username + '\'' +
+				", userId='" + userId + '\'' +
 				", content='" + content + '\'' +
 				", createdAt=" + getCreatedAt() +
 				", updatedAt=" + getUpdatedAt() +
