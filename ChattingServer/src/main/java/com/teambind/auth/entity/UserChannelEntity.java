@@ -12,7 +12,7 @@ public class UserChannelEntity extends BaseEntity {
 	}
 	
 	public UserChannelEntity(Long userId, Long channelId, Long lastReadMsgSeq) {
-		UserId = userId;
+		this.userId = userId;
 		this.channelId = channelId;
 		this.lastReadMsgSeq = lastReadMsgSeq;
 	}
@@ -23,7 +23,7 @@ public class UserChannelEntity extends BaseEntity {
 	
 	@Id
 	@Column(name = "user_id", nullable = false)
-	private Long UserId;
+	private Long userId;
 	
 	@Id
 	@Column(name = "channel_id", nullable = false)
@@ -34,7 +34,7 @@ public class UserChannelEntity extends BaseEntity {
 	
 	
 	public Long getUserId() {
-		return UserId;
+		return userId;
 	}
 	
 	public Long getChannelId() {
