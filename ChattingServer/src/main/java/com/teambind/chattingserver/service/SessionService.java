@@ -38,35 +38,38 @@ public class SessionService {
 				stringRedisTemplate.expire(channelIdKey, TTL, TimeUnit.SECONDS);
 			}
 			
-		}catch (Exception e) {
+		} catch (Exception e) {
 			log.error("REDIS expire failed. key: {} channelId: {}", channelIdKey, httpSessionId);
 		}
 	}
-	public boolean setActiveChannel(UserId userId , ChannelId channelId) {
+	
+	public boolean setActiveChannel(UserId userId, ChannelId channelId) {
 		String channelIdKey = buildChannelIdKey(userId);
 		try {
 			stringRedisTemplate.opsForValue().set(channelIdKey, channelId.channelId().toString(), TTL, TimeUnit.SECONDS);
 			return true;
-		} catch (Exception e){
-		log.error("REDIS set failed. key: {} channelId: {}", channelIdKey, channelId);
-		return false;}
+		} catch (Exception e) {
+			log.error("REDIS set failed. key: {} channelId: {}", channelIdKey, channelId);
+			return false;
+		}
 	}
 	
-	public boolean isOnline(UserId userId,ChannelId channelId) {
+	public boolean isOnline(UserId userId, ChannelId channelId) {
 		String channelIdKey = buildChannelIdKey(userId);
-		try{
+		try {
 			String chId = stringRedisTemplate.opsForValue().get(channelIdKey);
-			if(chId != null && chId.equals(channelId.channelId().toString())) {
+			if (chId != null && chId.equals(channelId.channelId().toString())) {
 				return true;
 			}
-		}catch (Exception e){
+		} catch (Exception e) {
 			log.error("REDIS get failed. key: {} channelId: {}", channelIdKey, channelId);
 			return false;
 		}
 		return false;
 	}
+	
 	private String buildChannelIdKey(UserId userId) {
-		return "%s:%d:%s".formatted(NAMESPACE, userId.id(), IdKey.CHANNEL_ID);
+		return "%s:%d:%s".formatted(NAMESPACE, userId.id(), IdKey.CHANNEL_ID.getValue());
 	}
 	
 	public String getUsername() {

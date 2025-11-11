@@ -1,7 +1,6 @@
 package com.teambind.messagesystem;
 
 
-import com.teambind.messagesystem.dto.ChannelId;
 import com.teambind.messagesystem.dto.websocket.outbound.WriteMessage;
 import com.teambind.messagesystem.handler.CommandHandler;
 import com.teambind.messagesystem.handler.InboundMessageHandler;
@@ -20,7 +19,7 @@ public class MessageClient {
 	
 	public static void main(String[] args) {
 		final String BASE_URL = "localhost:8080";
-		final String WEBSOCKET_PATH = "/ws/v1/message";
+		final String WEBSOCKET_PATH = "/ws/v1/connect";
 		TerminalService terminalService;
 		try {
 			terminalService = TerminalService.create();
@@ -33,10 +32,10 @@ public class MessageClient {
 		RestApiService restApiService = new RestApiService(terminalService, BASE_URL);
 		WebSocketSender webSocketSender = new WebSocketSender(terminalService);
 		UserService userService = new UserService();
-		WebSocketService webSocketService = new WebSocketService(terminalService, webSocketSender,userService, BASE_URL, WEBSOCKET_PATH);
+		WebSocketService webSocketService = new WebSocketService(terminalService, webSocketSender, userService, BASE_URL, WEBSOCKET_PATH);
 		InboundMessageHandler inboundMessageHandler = new InboundMessageHandler(terminalService, userService);
 		webSocketService.setWebSocketMessageHandler(new WebSocketMessageHandler(terminalService, inboundMessageHandler));
-		CommandHandler commandHandler = new CommandHandler(restApiService, userService,webSocketService, terminalService);
+		CommandHandler commandHandler = new CommandHandler(restApiService, userService, webSocketService, terminalService);
 		
 		
 		terminalService.printSystemMessage("'/help' for help");
@@ -53,8 +52,8 @@ public class MessageClient {
 					break;
 				}
 			} else if (!input.isEmpty() && userService.isInChannel()) {
-					terminalService.PrintMessage("<me>", input);
-					webSocketService.sendMessage(new WriteMessage(userService.getChannelId(), input));
+				terminalService.PrintMessage("<me>", input);
+				webSocketService.sendMessage(new WriteMessage(userService.getChannelId(), input));
 			}
 		}
 	}

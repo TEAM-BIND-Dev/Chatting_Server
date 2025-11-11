@@ -10,13 +10,11 @@ import com.teambind.auth.repository.ChannelRepository;
 import com.teambind.auth.repository.UserChannelRepository;
 import com.teambind.constant.ResultType;
 import com.teambind.constant.UserConnectionStatus;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 import java.util.Optional;
@@ -30,7 +28,7 @@ public class ChannelService {
 	private final UserConnectionService userConnectionService;
 	
 	public ChannelService(ChannelRepository channelRepository, UserChannelRepository userChannelRepository, SessionService sessionService, UserConnectionService userConnectionService) {
-
+		
 		this.channelRepository = channelRepository;
 		this.userChannelRepository = userChannelRepository;
 		this.sessionService = sessionService;
@@ -38,8 +36,7 @@ public class ChannelService {
 	}
 	
 	
-	public List<UserId> getParticipantIds(ChannelId channelId)
-	{
+	public List<UserId> getParticipantIds(ChannelId channelId) {
 		return userChannelRepository.findUserIdByChannelId(channelId.channelId())
 				.stream().map(
 						userId -> new UserId(userId.getUserId())
@@ -54,23 +51,21 @@ public class ChannelService {
 	
 	@Transactional
 	public Pair<Optional<Channel>, ResultType> creat(UserId senderUserId, UserId participantId, String title) {
-		if(title != null ||title.isEmpty())
-		{
+		if (title == null || title.isEmpty()) {
 			log.warn("Invalid args : title is empty.");
 			return Pair.of(Optional.empty(), ResultType.INVALID_ARGS);
 		}
 		
-		if(userConnectionService.getStatus(senderUserId, participantId) != UserConnectionStatus.ACCEPTED)
-		{
+		if (userConnectionService.getStatus(senderUserId, participantId) != UserConnectionStatus.ACCEPTED) {
 			log.warn("Invalid args : senderUserId is not accepted.");
-			return Pair.of(Optional.empty(), ResultType.INVALID_ARGS);
+			return Pair.of(Optional.empty(), ResultType.NOT_ALLOWED);
 		}
 		
 		
-		try{
-			final Long HEAD_COUNT =2L;
+		try {
+			final Long HEAD_COUNT = 2L;
 			ChannelEntity channelEntity = channelRepository.save(
-					new ChannelEntity(HEAD_COUNT,title));
+					new ChannelEntity(HEAD_COUNT, title));
 			
 			Long channelId = channelEntity.getChannelId();
 			List<UserChannelEntity> userChannelEntities = List.of(
@@ -78,10 +73,10 @@ public class ChannelService {
 					new UserChannelEntity(participantId.id(), channelId, 0L)
 			);
 			userChannelRepository.saveAll(userChannelEntities);
-			Channel channel = new Channel( new ChannelId(channelId), title, HEAD_COUNT);
+			Channel channel = new Channel(new ChannelId(channelId), title, HEAD_COUNT);
 			return Pair.of(Optional.of(channel), ResultType.SUCCESS);
 			
-		}catch (Exception e) {
+		} catch (Exception e) {
 			log.error("create creat faild. cause : {}", e.getMessage());
 			return Pair.of(Optional.empty(), ResultType.FAIL);
 		}

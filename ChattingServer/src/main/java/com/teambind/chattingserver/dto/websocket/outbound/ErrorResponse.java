@@ -6,13 +6,13 @@ import lombok.Getter;
 
 @Getter
 public class ErrorResponse extends BaseMessage {
-
+	
 	@JsonProperty("messageType")
 	private final String messageType;
-
+	
 	@JsonProperty("message")
 	private final String message;
-
+	
 	public ErrorResponse(String messageType, String message) {
 		super(MessageType.ERROR);
 		this.messageType = messageType;

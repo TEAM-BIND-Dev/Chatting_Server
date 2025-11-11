@@ -53,6 +53,10 @@ public class WebSocketSessionManager {
 	
 	
 	public void sendMessage(WebSocketSession session, BaseMessage message) {
+		if (session == null) {
+			log.warn("Cannot send message. Session is null");
+			return;
+		}
 		jsonUtil.toJson(message).ifPresent(
 				msg -> {
 					try {

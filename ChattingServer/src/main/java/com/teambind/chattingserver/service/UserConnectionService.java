@@ -2,9 +2,9 @@ package com.teambind.chattingserver.service;
 
 import com.teambind.auth.dto.InviteCode;
 import com.teambind.auth.dto.User;
+import com.teambind.auth.dto.UserId;
 import com.teambind.auth.dto.projection.UserIdUsernameInvitorUserIdProjection;
 import com.teambind.auth.entity.UserConnectionEntity;
-import com.teambind.auth.dto.UserId;
 import com.teambind.auth.repository.UserConnectionRepository;
 import com.teambind.constant.UserConnectionStatus;
 import org.slf4j.Logger;
@@ -36,14 +36,11 @@ public class UserConnectionService {
 		List<UserIdUsernameInvitorUserIdProjection> userA = userConnectionRepository.findUserConnectionPartnerAUserIdUserIdANdStatus(userId.id(), status);
 		List<UserIdUsernameInvitorUserIdProjection> userB = userConnectionRepository.findUserConnectionPartnerBUserIdUserIdANdStatus(userId.id(), status);
 		
-		if(status == UserConnectionStatus.ACCEPTED)
-		{
+		if (status == UserConnectionStatus.ACCEPTED) {
 			return Stream.concat(userA.stream(), userB.stream()).map(
 					item -> new User(new UserId(item.getUserId()), item.getUsername())
 			).toList();
-		}
-		
-		else{
+		} else {
 			return Stream.concat(userA.stream(), userB.stream())
 					.filter(item -> !item.getInvitorUserId().equals(userId.id()))
 					.map(item -> new User(new UserId(item.getInvitorUserId()), item.getUsername()))
@@ -118,6 +115,13 @@ public class UserConnectionService {
 		};
 	}
 	
+	public long countConnectionStatus(UserId senderUserId, List<UserId> partnerUserIds, UserConnectionStatus status) {
+		return userConnectionRepository.countByPartnerUserAIdAndPartnerUserBIdInAndStatus(
+				Long.min(senderUserId.id(), partnerUserIds.stream().mapToLong(UserId::id).min().orElse(0)),
+				partnerUserIds.stream().mapToLong(UserId::id).boxed().toList(),
+				status);
+	}
+	
 	@Transactional
 	public Pair<Optional<UserId>, String> accept(UserId accepterUserId, String invitorUsername) {
 		Optional<UserId> userId = userService.getUserId(invitorUsername);
@@ -188,7 +192,7 @@ public class UserConnectionService {
 						log.error("Disconnect fail. cause : {}", ex.getMessage());
 					}
 					return Pair.of(false, "Disconnect fail.");
-
+					
 				})).orElse(Pair.of(false, "Disconnect fail."));
 	}
 	

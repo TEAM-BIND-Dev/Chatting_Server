@@ -16,6 +16,7 @@ public class FetchConnectionsResponse extends BaseMessage {
 		super(MessageType.FETCH_CONNECTIONS_RESPONSE);
 		this.connections = connections;
 	}
+	
 	public List<Connection> getConnections() {
 		return connections;
 	}

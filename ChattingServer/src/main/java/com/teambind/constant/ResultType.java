@@ -11,7 +11,7 @@ public enum ResultType {
 	NOT_ALLOWED("unconnected users included."),
 	;
 	
-	private final  String message;
+	private final String message;
 	
 	ResultType(String message) {
 		this.message = message;

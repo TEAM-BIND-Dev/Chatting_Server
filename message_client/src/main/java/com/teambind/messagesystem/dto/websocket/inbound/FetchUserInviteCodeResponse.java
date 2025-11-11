@@ -15,6 +15,7 @@ public class FetchUserInviteCodeResponse extends BaseMessage {
 		super(MessageType.FETCH_USER_INVITE_CODE_RESPONSE);
 		this.inviteCode = inviteCode;
 	}
+	
 	public InviteCode getInviteCode() {
 		return inviteCode;
 	}

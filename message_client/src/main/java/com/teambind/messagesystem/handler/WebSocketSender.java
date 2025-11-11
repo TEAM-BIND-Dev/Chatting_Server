@@ -17,13 +17,18 @@ public class WebSocketSender {
 	public void sendMessage(Session session, WriteMessage messageRequest) {
 		if (session != null && session.isOpen()) {
 			JsonUtil.toJson(messageRequest).ifPresent(payload -> {
+				terminalService.printSystemMessage("[DEBUG] Sending WriteMessage: " + payload);
 				session.getAsyncRemote()
 						.sendText(payload, result -> {
 							if (!result.isOK()) {
 								terminalService.printSystemMessage(String.format("Failed to send message %s. Reason: %s", payload, result.getException().getMessage()));
+							} else {
+								terminalService.printSystemMessage("[DEBUG] Message sent successfully");
 							}
 						});
 			});
+		} else {
+			terminalService.printSystemMessage("[DEBUG] Session is null or not open");
 		}
 	}
 }

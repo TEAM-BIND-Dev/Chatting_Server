@@ -52,7 +52,7 @@ public class WebSocketService {
 		
 		ClientEndpointConfig config = ClientEndpointConfig.Builder.create().configurator(configurator).build();
 		try {
-			session = clientManager.connectToServer(new WebSocketSessionHandler(userService,terminalService, this), config,
+			session = clientManager.connectToServer(new WebSocketSessionHandler(userService, terminalService, this), config,
 					new URI(webSocketUrl));
 			session.addMessageHandler(webSocketMessageHandler);
 			enableKeepAlive();

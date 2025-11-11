@@ -19,7 +19,7 @@ import com.teambind.messagesystem.constant.MessageType;
 		@JsonSubTypes.Type(value = FetchConnectionsResponse.class, name = MessageType.FETCH_CONNECTIONS_RESPONSE),
 		@JsonSubTypes.Type(value = CreateResponse.class, name = MessageType.CREATE_RESPONSE),
 		@JsonSubTypes.Type(value = EnterResponse.class, name = MessageType.ENTER_RESPONSE),
-
+		
 		@JsonSubTypes.Type(value = AcceptNotification.class, name = MessageType.NOTIFY_ACCEPT),
 		@JsonSubTypes.Type(value = MessageNotification.class, name = MessageType.NOTIFY_MESSAGE),
 		@JsonSubTypes.Type(value = InviteNotification.class, name = MessageType.ASK_INVITE),

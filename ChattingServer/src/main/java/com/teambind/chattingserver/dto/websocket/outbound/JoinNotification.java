@@ -4,8 +4,8 @@ package com.teambind.chattingserver.dto.websocket.outbound;
 import com.teambind.auth.dto.ChannelId;
 import com.teambind.constant.MessageType;
 
-public class JoinNotification extends BaseMessage{
-
+public class JoinNotification extends BaseMessage {
+	
 	private final ChannelId channelId;
 	private final String title;
 	
@@ -14,9 +14,11 @@ public class JoinNotification extends BaseMessage{
 		this.channelId = channelId;
 		this.title = title;
 	}
+	
 	public ChannelId getChannelId() {
 		return channelId;
 	}
+	
 	public String getTitle() {
 		return title;
 	}

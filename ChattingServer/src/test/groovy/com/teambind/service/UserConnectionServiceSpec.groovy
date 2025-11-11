@@ -2,11 +2,11 @@ package com.teambind.service
 
 import com.teambind.auth.dto.InviteCode
 import com.teambind.auth.dto.User
+import com.teambind.auth.dto.UserId
 import com.teambind.auth.dto.projection.InvitorUserIdProjection
 import com.teambind.auth.dto.projection.UserConnectionStatusProjection
 import com.teambind.auth.entity.UserConnectionEntity
 import com.teambind.auth.entity.UserEntity
-import com.teambind.auth.dto.UserId
 import com.teambind.auth.repository.UserConnectionRepository
 import com.teambind.auth.repository.UserRepository
 import com.teambind.chattingserver.service.UserConnectionLimitService

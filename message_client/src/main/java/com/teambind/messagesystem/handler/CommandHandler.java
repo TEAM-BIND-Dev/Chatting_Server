@@ -62,7 +62,7 @@ public class CommandHandler {
 	}
 	
 	private Boolean register(String[] params) {
-		if (userService.isInLobby()&& params.length > 1) {
+		if (userService.isInLobby() && params.length > 1) {
 			if (restApiService.register(params[0], params[1])) {
 				terminalService.printSystemMessage("Registered successfully");
 			} else {
@@ -73,15 +73,16 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private Boolean accept(String[] parms){
-		if(parms.length >0){
+	private Boolean accept(String[] parms) {
+		if (parms.length > 0) {
 			webSocketService.sendMessage(new AcceptRequest(parms[0]));
 			terminalService.printSystemMessage("Accept accept invite");
 		}
 		return true;
 	}
+	
 	private Boolean unregister(String[] params) {
-		if(userService.isInLobby()) {
+		if (userService.isInLobby()) {
 			webSocketService.closeSession();
 			if (restApiService.unregister()) {
 				terminalService.printSystemMessage("Unregistered successfully");
@@ -107,23 +108,24 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private Boolean connections(String[] params){
-		if(userService.isInLobby() ) {
+	private Boolean connections(String[] params) {
+		if (userService.isInLobby()) {
 			webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.ACCEPTED));
 			terminalService.printSystemMessage("Get connection list.");
 		}
 		return true;
 	}
 	
-	private Boolean pending(String[] params)
-	{if(userService.isInLobby()) {
-		webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.PENDING));
-		terminalService.printSystemMessage("Get pending connection list.");
-	}
+	private Boolean pending(String[] params) {
+		if (userService.isInLobby()) {
+			webSocketService.sendMessage(new FetchConnectionsRequest(UserConnectionStatus.PENDING));
+			terminalService.printSystemMessage("Get pending connection list.");
+		}
 		return true;
 	}
-	private Boolean inviteCode(String[] params){
-		if(userService.isInLobby() ) {
+	
+	private Boolean inviteCode(String[] params) {
+		if (userService.isInLobby()) {
 			
 			webSocketService.sendMessage(new FetchUserInviteCodeRequest());
 			terminalService.printSystemMessage("Request get invite code...");
@@ -131,8 +133,8 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private Boolean disconnect(String[] params){
-		if(userService.isInLobby() && params.length >0){
+	private Boolean disconnect(String[] params) {
+		if (userService.isInLobby() && params.length > 0) {
 			webSocketService.sendMessage(new DisconnectRequest(params[0]));
 			terminalService.printSystemMessage("Disconnect user");
 		}
@@ -140,8 +142,7 @@ public class CommandHandler {
 	}
 	
 	private Boolean invite(String[] params) {
-		if(params.length > 0)
-		{
+		if (params.length > 0) {
 			webSocketService.sendMessage(new InviteRequest(new InviteCode(params[0])));
 			terminalService.printSystemMessage("Request user Invite");
 		}
@@ -149,8 +150,7 @@ public class CommandHandler {
 	}
 	
 	private Boolean reject(String[] params) {
-		if(userService.isInLobby() && params.length > 0)
-		{
+		if (userService.isInLobby() && params.length > 0) {
 			webSocketService.sendMessage(new RejectRequest(params[0]));
 			terminalService.printSystemMessage("Reject invite request");
 		}
@@ -181,8 +181,8 @@ public class CommandHandler {
 		return false;
 	}
 	
-	private Boolean create(String[] params){
-		if(userService.isInLobby() && params.length > 1) {
+	private Boolean create(String[] params) {
+		if (userService.isInLobby() && params.length > 1) {
 			webSocketService.sendMessage(new CreateRequest(params[0], params[1]));
 			terminalService.printSystemMessage("Request create channel");
 			return false;
@@ -190,14 +190,14 @@ public class CommandHandler {
 		return true;
 	}
 	
-	private Boolean enter(String[] params){
-		if(userService.isInLobby() && params.length > 0) {
-			try{
+	private Boolean enter(String[] params) {
+		if (userService.isInLobby() && params.length > 0) {
+			try {
 				ChannelId channelId = new ChannelId(Long.valueOf(params[0]));
 				webSocketService.sendMessage(new EnterRequest(channelId));
 				terminalService.printSystemMessage("Enter channel");
 				
-			}catch (Exception e){
+			} catch (Exception e) {
 				terminalService.printSystemMessage("Invalid channel id");
 				return true;
 			}
@@ -225,9 +225,9 @@ public class CommandHandler {
 						'/connections' Get connection users. ex: /connections
 						'/pending' Get pending connection inviters. ex: /pending
 						'/disconnect' Disconnect a user. ex: /disconnect <ConnectedUsername>
-
 						
-					
+						
+						
 						
 						Commands For Lobby/Channel
 						'/logout' Logout a user. ex: /logout

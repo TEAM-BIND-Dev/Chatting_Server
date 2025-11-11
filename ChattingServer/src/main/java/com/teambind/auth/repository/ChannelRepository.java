@@ -9,8 +9,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ChannelRepository extends JpaRepository< ChannelEntity,Long> {
+public interface ChannelRepository extends JpaRepository<ChannelEntity, Long> {
 	
 	Optional<ChannelTitleProjection> findChannelTitleByChannelId(@NonNull Long channelId);
-
+	
 }

@@ -3,10 +3,10 @@ package com.teambind.chattingserver.service;
 
 import com.teambind.auth.dto.InviteCode;
 import com.teambind.auth.dto.User;
+import com.teambind.auth.dto.UserId;
 import com.teambind.auth.dto.projection.CountProjection;
 import com.teambind.auth.dto.projection.UsernameProjection;
 import com.teambind.auth.entity.UserEntity;
-import com.teambind.auth.dto.UserId;
 import com.teambind.auth.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,7 +14,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -32,6 +34,13 @@ public class UserService {
 	public Optional<UserId> getUserId(String username) {
 		return userRepository.findByUsername(username).map(userEntity -> new UserId(userEntity.getUserId()));
 	}
+	
+	public List<UserId> getUserIds(List<String> usernames) {
+		return userRepository.findUserIdByUsernameIn(usernames).stream()
+				.map(userIdProjection -> new UserId(userIdProjection.getUserId()))
+				.collect(Collectors.toList());
+	}
+	
 	
 	public Optional<String> getUsername(UserId userId) {
 		return userRepository.findByUserId(userId.id()).map(UsernameProjection::getUsername);

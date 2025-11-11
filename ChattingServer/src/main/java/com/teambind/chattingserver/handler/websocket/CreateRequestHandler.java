@@ -36,7 +36,7 @@ public class CreateRequestHandler implements BaseRequestHandler<CreateRqeust> {
 	public void handleRequest(WebSocketSession senderSession, CreateRqeust request) {
 		UserId senderUserId = (UserId) senderSession.getAttributes().get(IdKey.USER_ID.getValue());
 		
-		Optional<UserId> userId = userService.getUserId(request.getParticipateUsername());
+		Optional<UserId> userId = userService.getUserId(request.getParticipateUsernames());
 		if (userId.isEmpty()) {
 			sessionManager.sendMessage(senderSession, new ErrorResponse(MessageType.CREATE_REQUEST, ResultType.NOT_FOUND.getMessage()));
 			return;

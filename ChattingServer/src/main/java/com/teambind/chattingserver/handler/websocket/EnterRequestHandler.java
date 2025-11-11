@@ -1,15 +1,10 @@
 package com.teambind.chattingserver.handler.websocket;
 
-import com.teambind.auth.dto.Channel;
 import com.teambind.auth.dto.UserId;
-import com.teambind.chattingserver.dto.websocket.inbound.CreateRqeust;
 import com.teambind.chattingserver.dto.websocket.inbound.EnterRequest;
-import com.teambind.chattingserver.dto.websocket.outbound.CreateResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.EnterResponse;
 import com.teambind.chattingserver.dto.websocket.outbound.ErrorResponse;
-import com.teambind.chattingserver.dto.websocket.outbound.JoinNotification;
 import com.teambind.chattingserver.service.ChannelService;
-import com.teambind.chattingserver.service.UserService;
 import com.teambind.chattingserver.session.WebSocketSessionManager;
 import com.teambind.constant.IdKey;
 import com.teambind.constant.MessageType;

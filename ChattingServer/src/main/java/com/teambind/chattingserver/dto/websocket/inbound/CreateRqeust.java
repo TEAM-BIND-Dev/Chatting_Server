@@ -2,24 +2,24 @@ package com.teambind.chattingserver.dto.websocket.inbound;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.teambind.auth.dto.InviteCode;
 import com.teambind.constant.MessageType;
+
+import java.util.List;
 
 
 public class CreateRqeust extends BaseRequest {
 	
 	private final String title;
-	private final String participateUsername;
-	
+	private final List<String> participateUsernames;
 	
 	
 	@JsonCreator
 	public CreateRqeust(
 			@JsonProperty("title") String title,
-			@JsonProperty("participateUsername") String participateUsername) {
+			@JsonProperty("participateUsername") List<String> participateUsernames) {
 		super(MessageType.CREATE_REQUEST);
 		this.title = title;
-		this.participateUsername = participateUsername;
+		this.participateUsernames = participateUsernames;
 		
 	}
 	
@@ -27,8 +27,8 @@ public class CreateRqeust extends BaseRequest {
 		return title;
 	}
 	
-	public String getParticipateUsername() {
-		return participateUsername;
+	public List<String> getParticipateUsernames() {
+		return participateUsernames;
 	}
 	
 }

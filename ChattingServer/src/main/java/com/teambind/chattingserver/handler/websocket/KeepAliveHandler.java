@@ -18,6 +18,6 @@ public class KeepAliveHandler implements BaseRequestHandler<KeepAlive> {
 	@Override
 	public void handleRequest(WebSocketSession webSocketSession, KeepAlive request) {
 		UserId senderUserId = (UserId) webSocketSession.getAttributes().get(IdKey.USER_ID.getValue());
-		sessionService.refreshTTL(senderUserId,webSocketSession.getId());
+		sessionService.refreshTTL(senderUserId, webSocketSession.getId());
 	}
 }

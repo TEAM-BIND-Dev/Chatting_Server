@@ -7,6 +7,7 @@ public class WebSocketMessageHandler implements MessageHandler.Whole<String> {
 	
 	private final TerminalService terminalService;
 	private final InboundMessageHandler inboundMessageHandler;
+	
 	public WebSocketMessageHandler(TerminalService terminalService, InboundMessageHandler inboundMessageHandler) {
 		this.terminalService = terminalService;
 		this.inboundMessageHandler = inboundMessageHandler;

@@ -6,10 +6,10 @@ import com.teambind.messagesystem.constant.MessageType;
 import com.teambind.messagesystem.dto.ChannelId;
 
 public class EnterResponse extends BaseMessage {
-
+	
 	private final ChannelId channelId;
 	private final String title;
-
+	
 	@JsonCreator
 	public EnterResponse(
 			@JsonProperty("channelId") ChannelId channelId,
@@ -18,11 +18,11 @@ public class EnterResponse extends BaseMessage {
 		this.channelId = channelId;
 		this.title = title;
 	}
-
+	
 	public ChannelId getChannelId() {
 		return channelId;
 	}
-
+	
 	public String getTitle() {
 		return title;
 	}

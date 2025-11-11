@@ -1,8 +1,8 @@
 package com.teambind.chattingserver.service;
 
+import com.teambind.auth.dto.UserId;
 import com.teambind.auth.entity.UserConnectionEntity;
 import com.teambind.auth.entity.UserEntity;
-import com.teambind.auth.dto.UserId;
 import com.teambind.auth.repository.UserConnectionRepository;
 import com.teambind.auth.repository.UserRepository;
 import com.teambind.constant.UserConnectionStatus;
