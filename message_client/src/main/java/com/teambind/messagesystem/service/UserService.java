@@ -7,7 +7,7 @@ public class UserService {
 	private Location userLocation = Location.LOBBY;
 	private String username = "";
 	private ChannelId channelId;
-
+	
 	public boolean isInLobby() {
 		return userLocation == Location.LOBBY;
 	}
